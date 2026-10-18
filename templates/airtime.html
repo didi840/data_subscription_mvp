@@ -1,0 +1,402 @@
+{% extends "base.html" %}
+
+{% block title %}Airtime Recharge{% endblock %}
+
+{% block content %}
+
+<div class="airtime-page"><div class="page-header">
+    <a href="{{ url_for('dashboard') }}" class="back-btn">←</a>
+
+    <div>
+        <h1>Airtime Recharge</h1>
+        <p>Instant recharge across all major Nigerian networks</p>
+    </div>
+</div>
+
+<div class="balance-box">
+    <div class="balance-info">
+        <span>Available Balance</span>
+        <strong>₦{{ "{:,.0f}".format(user.wallet) }}</strong>
+    </div>
+
+    <div class="balance-icon">
+        ₦
+    </div>
+</div>
+
+<form method="POST" class="form-card">
+
+    <div class="section-heading">
+        <h2>Select Network</h2>
+        <p>Choose the network you want to recharge</p>
+    </div>
+
+    <div class="network-grid">
+
+        <label class="network-option">
+            <input type="radio" name="network" value="MTN" required>
+
+            <div class="network-logo">
+                <img src="{{ url_for('static', filename='images/mtn.svg') }}"
+                     alt="MTN">
+            </div>
+
+            <span>MTN</span>
+        </label>
+
+        <label class="network-option">
+            <input type="radio" name="network" value="Airtel">
+
+            <div class="network-logo">
+                <img src="{{ url_for('static', filename='images/airtel.svg') }}"
+                     alt="Airtel">
+            </div>
+
+            <span>Airtel</span>
+        </label>
+
+        <label class="network-option">
+            <input type="radio" name="network" value="Glo">
+
+            <div class="network-logo">
+                <img src="{{ url_for('static', filename='images/glo.svg') }}"
+                     alt="Glo">
+            </div>
+
+            <span>Glo</span>
+        </label>
+
+        <label class="network-option">
+            <input type="radio" name="network" value="9mobile">
+
+            <div class="network-logo">
+                <img src="{{ url_for('static', filename='images/9mobile.svg') }}"
+                     alt="9mobile">
+            </div>
+
+            <span>9mobile</span>
+        </label>
+
+    </div>
+
+    <div class="input-section">
+
+        <label for="phone">Recipient Phone Number</label>
+
+        <input
+            type="tel"
+            id="phone"
+            name="phone"
+            placeholder="08012345678"
+            maxlength="11"
+            required
+        >
+
+        <small>Enter the 11-digit Nigerian phone number</small>
+
+    </div>
+
+    <div class="input-section">
+
+        <label for="amount">Recharge Amount</label>
+
+        <div class="amount-input">
+            <span>₦</span>
+
+            <input
+                type="number"
+                id="amount"
+                name="amount"
+                placeholder="Enter amount"
+                min="100"
+                required
+            >
+        </div>
+
+        <small>Minimum recharge amount is ₦100</small>
+
+    </div>
+
+    <button type="submit" class="btn full-btn">
+        Recharge Airtime
+    </button>
+
+</form>
+
+</div><style>
+
+    .airtime-page {
+        max-width: 850px;
+        margin: 0 auto;
+    }
+
+    /* HEADER */
+
+    .page-header {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin-bottom: 25px;
+    }
+
+    .page-header h1 {
+        margin: 0;
+        font-size: 26px;
+        font-weight: 700;
+        color: #fff;
+        letter-spacing: -0.4px;
+    }
+
+    .page-header p {
+        margin: 5px 0 0;
+        color: #8d8d8d;
+        font-size: 14px;
+    }
+
+    /* BALANCE */
+
+    .balance-box {
+        background: linear-gradient(135deg, #171717, #0f0f0f);
+        border: 1px solid #292929;
+        border-radius: 16px;
+        padding: 22px 24px;
+        margin-bottom: 25px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    }
+
+    .balance-info {
+        display: flex;
+        flex-direction: column;
+        gap: 7px;
+    }
+
+    .balance-info span {
+        color: #999;
+        font-size: 13px;
+        font-weight: 500;
+    }
+
+    .balance-info strong {
+        color: #ffd400;
+        font-size: 28px;
+        font-weight: 700;
+    }
+
+    .balance-icon {
+        width: 46px;
+        height: 46px;
+        border-radius: 12px;
+        background: #ffd400;
+        color: #111;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 22px;
+        font-weight: 700;
+    }
+
+    /* FORM */
+
+    .form-card {
+        background: #151515;
+        border: 1px solid #292929;
+        border-radius: 16px;
+        padding: 28px;
+    }
+
+    .section-heading {
+        margin-bottom: 20px;
+    }
+
+    .section-heading h2 {
+        margin: 0;
+        color: #fff;
+        font-size: 18px;
+        font-weight: 650;
+    }
+
+    .section-heading p {
+        margin: 5px 0 0;
+        color: #777;
+        font-size: 13px;
+    }
+
+    /* NETWORKS */
+
+    .network-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 12px;
+        margin-bottom: 30px;
+    }
+
+    .network-option {
+        position: relative;
+        background: #101010;
+        border: 1px solid #303030;
+        border-radius: 12px;
+        padding: 15px 8px;
+        min-height: 100px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 9px;
+        cursor: pointer;
+        color: #fff;
+        transition: all 0.2s ease;
+    }
+
+    .network-option:hover {
+        border-color: #ffd400;
+        transform: translateY(-2px);
+    }
+
+    .network-option input {
+        position: absolute;
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    .network-option:has(input:checked) {
+        border-color: #ffd400;
+        background: #1b1b1b;
+        box-shadow: 0 0 0 1px #ffd400;
+    }
+
+    .network-logo {
+        width: 44px;
+        height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .network-logo img {
+        width: 42px;
+        height: 42px;
+        object-fit: contain;
+        border-radius: 50%;
+    }
+
+    .network-option span {
+        font-size: 14px;
+        font-weight: 600;
+    }
+
+    /* INPUTS */
+
+    .input-section {
+        margin-bottom: 22px;
+    }
+
+    .input-section label {
+        display: block;
+        color: #eee;
+        font-size: 14px;
+        font-weight: 600;
+        margin-bottom: 9px;
+    }
+
+    .input-section small {
+        display: block;
+        color: #707070;
+        font-size: 12px;
+        margin-top: 7px;
+    }
+
+    .input-section input {
+        width: 100%;
+        box-sizing: border-box;
+        background: #0f0f0f;
+        border: 1px solid #303030;
+        color: #fff;
+        border-radius: 10px;
+        padding: 14px;
+        font-size: 15px;
+        outline: none;
+        transition: 0.2s;
+    }
+
+    .input-section input:focus {
+        border-color: #ffd400;
+    }
+
+    .input-section input::placeholder {
+        color: #555;
+    }
+
+    /* AMOUNT */
+
+    .amount-input {
+        position: relative;
+    }
+
+    .amount-input span {
+        position: absolute;
+        left: 14px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #ffd400;
+        font-size: 17px;
+        font-weight: 600;
+        z-index: 1;
+    }
+
+    .amount-input input {
+        padding-left: 34px;
+    }
+
+    /* BUTTON */
+
+    .full-btn {
+        width: 100%;
+        margin-top: 5px;
+        padding: 15px;
+        border-radius: 10px;
+        font-size: 15px;
+        font-weight: 700;
+        cursor: pointer;
+    }
+
+    /* MOBILE */
+
+    @media (max-width: 600px) {
+
+        .airtime-page {
+            width: 100%;
+        }
+
+        .page-header h1 {
+            font-size: 22px;
+        }
+
+        .page-header p {
+            font-size: 12px;
+        }
+
+        .balance-box {
+            padding: 18px;
+        }
+
+        .balance-info strong {
+            font-size: 24px;
+        }
+
+        .form-card {
+            padding: 20px;
+        }
+
+        .network-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .network-option {
+            min-height: 95px;
+        }
+    }
+
+</style>{% endblock %}

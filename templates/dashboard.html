@@ -1,0 +1,1143 @@
+{% extends "base.html" %}
+
+{% block title %}
+Dashboard
+{% endblock %}
+
+{% block content %}
+
+<style>
+
+    .dashboard-wrapper {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    /* =========================
+       WELCOME
+    ========================= */
+
+    .welcome-section {
+        margin-bottom: 24px;
+    }
+
+    .welcome-section h1 {
+        margin: 0 0 6px;
+        font-size: 28px;
+        color: #ffffff;
+    }
+
+    .welcome-section p {
+        margin: 0;
+        color: #9ca3af;
+        font-size: 14px;
+    }
+
+
+    /* =========================
+       WALLET CARD
+    ========================= */
+
+    .wallet-card {
+        background: linear-gradient(
+            135deg,
+            #ffd400,
+            #ffbf00
+        );
+
+        color: #111827;
+        border-radius: 20px;
+        padding: 25px;
+        margin-bottom: 28px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .wallet-card::after {
+        content: "";
+        position: absolute;
+        width: 180px;
+        height: 180px;
+        border-radius: 50%;
+        background: rgba(255,255,255,0.15);
+        right: -60px;
+        top: -60px;
+    }
+
+    .wallet-label {
+        font-size: 13px;
+        font-weight: 600;
+        opacity: 0.75;
+    }
+
+    /* =========================
+       BALANCE + EYE
+    ========================= */
+
+    .wallet-balance-row {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin: 8px 0 20px;
+        position: relative;
+        z-index: 2;
+    }
+
+    .wallet-balance {
+        font-size: 34px;
+        font-weight: 800;
+        margin: 0;
+        min-width: 180px;
+    }
+
+    .balance-toggle {
+        width: 42px;
+        height: 42px;
+        border: none;
+        border-radius: 50%;
+        background: rgba(17, 24, 39, 0.10);
+        color: #111827;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+        transition: background 0.2s ease, transform 0.2s ease;
+        padding: 0;
+    }
+
+    .balance-toggle:hover {
+        background: rgba(17, 24, 39, 0.18);
+        transform: scale(1.05);
+    }
+
+    .balance-toggle:active {
+        transform: scale(0.95);
+    }
+
+
+    .wallet-actions {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        position: relative;
+        z-index: 2;
+    }
+
+    .wallet-btn {
+        display: inline-block;
+        padding: 10px 16px;
+        border-radius: 10px;
+        text-decoration: none;
+        font-size: 13px;
+        font-weight: 700;
+        background: #111827;
+        color: #ffffff;
+    }
+
+    .wallet-btn.secondary {
+        background: rgba(17,24,39,0.12);
+        color: #111827;
+    }
+
+
+    /* =========================
+       SECTION TITLE
+    ========================= */
+
+    .section-heading {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 14px;
+    }
+
+    .section-heading h2 {
+        margin: 0;
+        color: #ffffff;
+        font-size: 18px;
+    }
+
+    .section-heading a {
+        color: #ffd400;
+        text-decoration: none;
+        font-size: 13px;
+        font-weight: 600;
+    }
+
+
+    /* =========================
+       SERVICES
+    ========================= */
+
+    .services-grid {
+        display: grid;
+        grid-template-columns:
+            repeat(4, minmax(0, 1fr));
+        gap: 14px;
+        margin-bottom: 30px;
+    }
+
+    .service-card {
+        background: #171717;
+        border: 1px solid #292929;
+        border-radius: 16px;
+        padding: 20px;
+        text-decoration: none;
+        transition:
+            transform 0.2s ease,
+            border-color 0.2s ease,
+            background 0.2s ease;
+    }
+
+    .service-card:hover {
+        transform: translateY(-3px);
+        border-color: #ffd400;
+        background: #1d1d1d;
+    }
+
+    .service-icon {
+        width: 46px;
+        height: 46px;
+        border-radius: 13px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(255,212,0,0.12);
+        color: #ffd400;
+        font-size: 22px;
+        margin-bottom: 14px;
+    }
+
+    .service-card h3 {
+        color: #ffffff;
+        margin: 0 0 6px;
+        font-size: 15px;
+    }
+
+    .service-card p {
+        color: #8f8f8f;
+        margin: 0;
+        font-size: 12px;
+        line-height: 1.5;
+    }
+
+
+    /* =========================
+       DATA NETWORKS
+    ========================= */
+
+    .network-grid {
+        display: grid;
+        grid-template-columns:
+            repeat(4, minmax(0, 1fr));
+        gap: 14px;
+        margin-bottom: 30px;
+    }
+
+    .network-card {
+        background: #171717;
+        border: 1px solid #292929;
+        border-radius: 16px;
+        padding: 18px;
+    }
+
+    .network-header {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 15px;
+    }
+
+    .network-logo {
+        width: 40px;
+        height: 40px;
+        object-fit: contain;
+        background: #ffffff;
+        border-radius: 10px;
+        padding: 5px;
+    }
+
+    .network-name {
+        color: #ffffff;
+        font-weight: 700;
+        font-size: 14px;
+    }
+
+    .network-type {
+        color: #777;
+        font-size: 11px;
+        margin-top: 2px;
+    }
+
+    .network-btn {
+        display: block;
+        width: 100%;
+        box-sizing: border-box;
+        text-align: center;
+        padding: 9px;
+        border-radius: 9px;
+        background: #ffd400;
+        color: #111827;
+        text-decoration: none;
+        font-size: 12px;
+        font-weight: 700;
+    }
+
+
+    /* =========================
+       LOWER GRID
+    ========================= */
+
+    .lower-grid {
+        display: grid;
+        grid-template-columns:
+            1.5fr 1fr;
+        gap: 18px;
+        margin-bottom: 30px;
+    }
+
+    .panel {
+        background: #171717;
+        border: 1px solid #292929;
+        border-radius: 16px;
+        padding: 20px;
+    }
+
+
+    /* =========================
+       TRANSACTIONS
+    ========================= */
+
+    .transaction-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 15px;
+        padding: 13px 0;
+        border-bottom: 1px solid #292929;
+    }
+
+    .transaction-item:last-child {
+        border-bottom: none;
+    }
+
+    .transaction-left {
+        min-width: 0;
+    }
+
+    .transaction-title {
+        color: #ffffff;
+        font-size: 13px;
+        font-weight: 600;
+        margin-bottom: 4px;
+    }
+
+    .transaction-date {
+        color: #777;
+        font-size: 11px;
+    }
+
+    .transaction-amount {
+        color: #ffffff;
+        font-size: 13px;
+        font-weight: 700;
+        white-space: nowrap;
+    }
+
+    .status-successful {
+        color: #4ade80;
+        font-size: 11px;
+        margin-top: 3px;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 25px 10px;
+        color: #777;
+        font-size: 13px;
+    }
+
+
+    /* =========================
+       ACCOUNT OVERVIEW
+    ========================= */
+
+    .account-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 15px;
+        padding: 13px 0;
+        border-bottom: 1px solid #292929;
+    }
+
+    .account-row:last-child {
+        border-bottom: none;
+    }
+
+    .account-label {
+        color: #888;
+        font-size: 12px;
+    }
+
+    .account-value {
+        color: #ffffff;
+        font-size: 13px;
+        font-weight: 600;
+        text-align: right;
+        word-break: break-word;
+    }
+
+    .account-status {
+        color: #4ade80;
+        font-size: 12px;
+        font-weight: 700;
+    }
+
+
+    /* =========================
+       MOBILE
+    ========================= */
+
+    @media (max-width: 900px) {
+
+        .services-grid,
+        .network-grid {
+            grid-template-columns:
+                repeat(2, minmax(0, 1fr));
+        }
+
+        .lower-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+
+    @media (max-width: 600px) {
+
+        .welcome-section h1 {
+            font-size: 23px;
+        }
+
+        .wallet-card {
+            padding: 20px;
+        }
+
+        .wallet-balance {
+            font-size: 29px;
+            min-width: 0;
+        }
+
+        .wallet-balance-row {
+            gap: 8px;
+        }
+
+        .balance-toggle {
+            width: 38px;
+            height: 38px;
+            font-size: 18px;
+        }
+
+        .services-grid,
+        .network-grid {
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .service-card {
+            padding: 15px;
+        }
+
+        .service-icon {
+            width: 40px;
+            height: 40px;
+            font-size: 19px;
+        }
+
+        .network-card {
+            padding: 13px;
+        }
+
+        .network-logo {
+            width: 34px;
+            height: 34px;
+        }
+
+        .network-name {
+            font-size: 12px;
+        }
+
+        .account-row {
+            align-items: flex-start;
+        }
+
+        .account-value {
+            max-width: 60%;
+        }
+    }
+
+</style>
+
+
+<div class="dashboard-wrapper">
+
+
+    <!-- =========================
+         WELCOME
+    ========================= -->
+
+    <div class="welcome-section">
+
+        <h1>
+            Welcome back, {{ user.name }} 👋
+        </h1>
+
+        <p>
+            Manage your wallet, data, airtime, and other services from one convenient location.
+        </p>
+
+    </div>
+
+
+    <!-- =========================
+         WALLET
+    ========================= -->
+
+    <div class="wallet-card">
+
+        <div class="wallet-label">
+            WALLET BALANCE
+        </div>
+
+
+        <div class="wallet-balance-row">
+
+            <div
+                class="wallet-balance"
+                id="walletBalance"
+                data-balance="₦{{ '{:,.2f}'.format(user.get('wallet', 0)) }}"
+            >
+                ₦{{ "{:,.2f}".format(user.get("wallet", 0)) }}
+            </div>
+
+
+            <button
+                type="button"
+                class="balance-toggle"
+                id="balanceToggle"
+                aria-label="Hide wallet balance"
+                title="Hide wallet balance"
+            >
+                👁️
+            </button>
+
+        </div>
+
+
+        <div class="wallet-actions">
+
+            <a
+                href="{{ url_for('wallet') }}"
+                class="wallet-btn"
+            >
+                Fund Wallet
+            </a>
+
+            <a
+                href="{{ url_for('transactions_page') }}"
+                class="wallet-btn secondary"
+            >
+                Transactions
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         QUICK SERVICES
+    ========================= -->
+
+    <div class="section-heading">
+
+        <h2>
+            Quick Services
+        </h2>
+
+    </div>
+
+
+    <div class="services-grid">
+
+
+        <a
+            href="{{ url_for('buy_data') }}"
+            class="service-card"
+        >
+
+            <div class="service-icon">
+                📶
+            </div>
+
+            <h3>
+                Buy Data
+            </h3>
+
+            <p>
+                Purchase data bundles for MTN, Airtel, Glo, and 9mobile.
+            </p>
+
+        </a>
+
+
+        <a
+            href="{{ url_for('buy_airtime') }}"
+            class="service-card"
+        >
+
+            <div class="service-icon">
+                📱
+            </div>
+
+            <h3>
+                Buy Airtime
+            </h3>
+
+            <p>
+                Recharge any Nigerian mobile network instantly.
+            </p>
+
+        </a>
+
+
+        <a
+            href="{{ url_for('cable') }}"
+            class="service-card"
+        >
+
+            <div class="service-icon">
+                📺
+            </div>
+
+            <h3>
+                Cable TV
+            </h3>
+
+            <p>
+                Pay DStv, GOtv, and Startimes subscriptions securely.
+            </p>
+
+        </a>
+
+
+        <a
+            href="{{ url_for('electricity') }}"
+            class="service-card"
+        >
+
+            <div class="service-icon">
+                ⚡
+            </div>
+
+            <h3>
+                Electricity
+            </h3>
+
+            <p>
+                Pay electricity bills and meter-related charges conveniently.
+            </p>
+
+        </a>
+
+
+        <a
+            href="{{ url_for('exam_pin') }}"
+            class="service-card"
+        >
+
+            <div class="service-icon">
+                🎓
+            </div>
+
+            <h3>
+                Exam PIN
+            </h3>
+
+            <p>
+                Purchase WAEC, NECO, NABTEB, and JAMB examination PINs.
+            </p>
+
+        </a>
+
+
+        <a
+            href="{{ url_for('airtime_to_cash') }}"
+            class="service-card"
+        >
+
+            <div class="service-icon">
+                💵
+            </div>
+
+            <h3>
+                Airtime to Cash
+            </h3>
+
+            <p>
+                Convert eligible airtime into wallet credit.
+            </p>
+
+        </a>
+
+
+        <a
+            href="{{ url_for('wallet') }}"
+            class="service-card"
+        >
+
+            <div class="service-icon">
+                💰
+            </div>
+
+            <h3>
+                Wallet
+            </h3>
+
+            <p>
+                Fund and manage your wallet balance securely.
+            </p>
+
+        </a>
+
+
+        <a
+            href="{{ url_for('transactions_page') }}"
+            class="service-card"
+        >
+
+            <div class="service-icon">
+                📋
+            </div>
+
+            <h3>
+                Transactions
+            </h3>
+
+            <p>
+                Review previous transactions and payment references.
+            </p>
+
+        </a>
+
+
+    </div>
+
+
+    <!-- =========================
+         DATA NETWORKS
+    ========================= -->
+
+    <div class="section-heading">
+
+        <h2>
+            Data Bundles
+        </h2>
+
+        <a href="{{ url_for('buy_data') }}">
+            View All
+        </a>
+
+    </div>
+
+
+    <div class="network-grid">
+
+
+        <div class="network-card">
+
+            <div class="network-header">
+
+                <img
+                    src="{{ url_for('static', filename='images/mtn.svg') }}"
+                    class="network-logo"
+                    alt="MTN"
+                >
+
+                <div>
+
+                    <div class="network-name">
+                        MTN
+                    </div>
+
+                    <div class="network-type">
+                        Data Bundles
+                    </div>
+
+                </div>
+
+            </div>
+
+            <a
+                href="{{ url_for('buy_data') }}"
+                class="network-btn"
+            >
+                Buy Data
+            </a>
+
+        </div>
+
+
+        <div class="network-card">
+
+            <div class="network-header">
+
+                <img
+                    src="{{ url_for('static', filename='images/airtel.svg') }}"
+                    class="network-logo"
+                    alt="Airtel"
+                >
+
+                <div>
+
+                    <div class="network-name">
+                        Airtel
+                    </div>
+
+                    <div class="network-type">
+                        Data Bundles
+                    </div>
+
+                </div>
+
+            </div>
+
+            <a
+                href="{{ url_for('buy_data') }}"
+                class="network-btn"
+            >
+                Buy Data
+            </a>
+
+        </div>
+
+
+        <div class="network-card">
+
+            <div class="network-header">
+
+                <img
+                    src="{{ url_for('static', filename='images/glo.svg') }}"
+                    class="network-logo"
+                    alt="Glo"
+                >
+
+                <div>
+
+                    <div class="network-name">
+                        Glo
+                    </div>
+
+                    <div class="network-type">
+                        Data Bundles
+                    </div>
+
+                </div>
+
+            </div>
+
+            <a
+                href="{{ url_for('buy_data') }}"
+                class="network-btn"
+            >
+                Buy Data
+            </a>
+
+        </div>
+
+
+        <div class="network-card">
+
+            <div class="network-header">
+
+                <img
+                    src="{{ url_for('static', filename='images/9mobile.svg') }}"
+                    class="network-logo"
+                    alt="9mobile"
+                >
+
+                <div>
+
+                    <div class="network-name">
+                        9mobile
+                    </div>
+
+                    <div class="network-type">
+                        Data Bundles
+                    </div>
+
+                </div>
+
+            </div>
+
+            <a
+                href="{{ url_for('buy_data') }}"
+                class="network-btn"
+            >
+                Buy Data
+            </a>
+
+        </div>
+
+
+    </div>
+
+
+    <!-- =========================
+         LOWER SECTION
+    ========================= -->
+
+    <div class="lower-grid">
+
+
+        <!-- RECENT TRANSACTIONS -->
+
+        <div class="panel">
+
+            <div class="section-heading">
+
+                <h2>
+                    Recent Transactions
+                </h2>
+
+                <a href="{{ url_for('transactions_page') }}">
+                    View All
+                </a>
+
+            </div>
+
+
+            {% if recent %}
+
+                {% for transaction in recent %}
+
+                    <div class="transaction-item">
+
+                        <div class="transaction-left">
+
+                            <div class="transaction-title">
+
+                                {% if transaction.get("type") == "airtime" %}
+
+                                    Airtime - {{ transaction.get("network", "Network") }}
+
+                                {% elif transaction.get("type") == "cable" %}
+
+                                    Cable TV - {{ transaction.get("plan", "Subscription") }}
+
+                                {% elif transaction.get("type") == "electricity" %}
+
+                                    Electricity - {{ transaction.get("network", "Provider") }}
+
+                                {% elif transaction.get("type") == "exam_pin" %}
+
+                                    Exam PIN - {{ transaction.get("network", "Exam") }}
+
+                                {% elif transaction.get("type") == "airtime_to_cash" %}
+
+                                    Airtime to Cash
+
+                                {% elif transaction.get("type") == "wallet_funding" %}
+
+                                    Wallet Funding
+
+                                {% else %}
+
+                                    Data - {{ transaction.get("network", "Network") }}
+
+                                {% endif %}
+
+                            </div>
+
+                            <div class="transaction-date">
+
+                                {{ transaction.get("reference", "No reference") }}
+
+                            </div>
+
+                            {% if transaction.get("status") == "successful" %}
+
+                                <div class="status-successful">
+                                    Successful
+                                </div>
+
+                            {% endif %}
+
+                        </div>
+
+
+                        <div class="transaction-amount">
+
+                            ₦{{ "{:,.2f}".format(transaction.get("amount", 0)) }}
+
+                        </div>
+
+                    </div>
+
+                {% endfor %}
+
+            {% else %}
+
+                <div class="empty-state">
+
+                    No transactions available.
+
+                </div>
+
+            {% endif %}
+
+        </div>
+
+
+        <!-- ACCOUNT OVERVIEW -->
+
+        <div class="panel">
+
+            <div class="section-heading">
+
+                <h2>
+                    Account Overview
+                </h2>
+
+            </div>
+
+
+            <div class="account-row">
+
+                <span class="account-label">
+                    Name
+                </span>
+
+                <span class="account-value">
+                    {{ user.name }}
+                </span>
+
+            </div>
+
+
+            <div class="account-row">
+
+                <span class="account-label">
+                    Email
+                </span>
+
+                <span class="account-value">
+                    {{ user.email }}
+                </span>
+
+            </div>
+
+
+            <div class="account-row">
+
+                <span class="account-label">
+                    Account Type
+                </span>
+
+                <span class="account-value">
+                    Customer
+                </span>
+
+            </div>
+
+
+            <div class="account-row">
+
+                <span class="account-label">
+                    Wallet Status
+                </span>
+
+                <span class="account-status">
+                    Active
+                </span>
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+</div>
+
+
+<script>
+
+    document.addEventListener("DOMContentLoaded", function () {
+
+        const balance =
+            document.getElementById("walletBalance");
+
+        const toggle =
+            document.getElementById("balanceToggle");
+
+        if (!balance || !toggle) {
+            return;
+        }
+
+        const actualBalance =
+            balance.getAttribute("data-balance");
+
+        let balanceVisible = true;
+
+
+        toggle.addEventListener("click", function () {
+
+            if (balanceVisible) {
+
+                balance.textContent = "₦••••••••";
+
+                toggle.textContent = "🙈";
+
+                toggle.setAttribute(
+                    "aria-label",
+                    "Show wallet balance"
+                );
+
+                toggle.setAttribute(
+                    "title",
+                    "Show wallet balance"
+                );
+
+                balanceVisible = false;
+
+            } else {
+
+                balance.textContent =
+                    actualBalance;
+
+                toggle.textContent = "👁️";
+
+                toggle.setAttribute(
+                    "aria-label",
+                    "Hide wallet balance"
+                );
+
+                toggle.setAttribute(
+                    "title",
+                    "Hide wallet balance"
+                );
+
+                balanceVisible = true;
+
+            }
+
+        });
+
+    });
+
+</script>
+
+{% endblock %}

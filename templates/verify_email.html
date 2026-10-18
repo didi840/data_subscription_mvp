@@ -1,0 +1,963 @@
+{% extends "base.html" %}
+
+{% block title %}Verify Your Email | DataHub{% endblock %}
+
+{% block content %}
+
+<style>
+    :root {
+        --verify-gold: #ffd400;
+        --verify-gold-dark: #e6bf00;
+        --verify-ink: #171717;
+        --verify-muted: #777b85;
+        --verify-border: #e9e9ed;
+        --verify-bg: #f6f7f9;
+        --verify-success: #168653;
+        --verify-danger: #d93025;
+    }
+
+    .verification-page,
+    .verification-page * {
+        box-sizing: border-box;
+    }
+
+    .verification-page {
+        min-height: calc(100vh - 80px);
+        padding: 40px 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background:
+            radial-gradient(circle at 15% 15%, rgba(255, 212, 0, .09), transparent 30%),
+            radial-gradient(circle at 90% 85%, rgba(255, 212, 0, .07), transparent 28%),
+            var(--verify-bg);
+    }
+
+    .verification-shell {
+        width: 100%;
+        max-width: 960px;
+        display: grid;
+        grid-template-columns: .95fr 1.05fr;
+        overflow: hidden;
+        background: #fff;
+        border: 1px solid rgba(20, 20, 20, .06);
+        border-radius: 26px;
+        box-shadow: 0 24px 70px rgba(20, 20, 20, .09),
+                    0 3px 12px rgba(20, 20, 20, .025);
+    }
+
+    /* BRAND PANEL */
+
+    .verification-brand-panel {
+        position: relative;
+        isolation: isolate;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        min-height: 570px;
+        padding: 36px;
+        overflow: hidden;
+        background: #171717;
+        color: #fff;
+    }
+
+    .verification-brand-panel::before {
+        content: "";
+        position: absolute;
+        z-index: -1;
+        width: 330px;
+        height: 330px;
+        right: -170px;
+        top: 100px;
+        border: 1px solid rgba(255, 212, 0, .18);
+        border-radius: 50%;
+        box-shadow: 0 0 0 35px rgba(255, 212, 0, .035),
+                    0 0 0 75px rgba(255, 212, 0, .025);
+    }
+
+    .verification-brand-panel::after {
+        content: "";
+        position: absolute;
+        z-index: -1;
+        width: 210px;
+        height: 210px;
+        left: -120px;
+        bottom: 35px;
+        border-radius: 50%;
+        background: rgba(255, 212, 0, .06);
+        filter: blur(4px);
+    }
+
+    .verification-brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .verification-brand-mark {
+        width: 43px;
+        height: 43px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 13px;
+        background: var(--verify-gold);
+        color: #171717;
+        font-size: 22px;
+        font-weight: 900;
+        box-shadow: 0 7px 20px rgba(255, 212, 0, .15);
+    }
+
+    .verification-brand-name {
+        margin: 0;
+        color: #fff;
+        font-size: 22px;
+        font-weight: 850;
+        letter-spacing: -.7px;
+    }
+
+    .verification-brand-caption {
+        display: block;
+        margin-top: 3px;
+        color: #a4a4a4;
+        font-size: 11px;
+        letter-spacing: 1.2px;
+        text-transform: uppercase;
+    }
+
+    .verification-brand-content {
+        position: relative;
+        z-index: 1;
+        margin: 55px 0;
+    }
+
+    .verification-eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 11px;
+        border: 1px solid rgba(255, 212, 0, .23);
+        border-radius: 30px;
+        background: rgba(255, 212, 0, .07);
+        color: var(--verify-gold);
+        font-size: 10px;
+        font-weight: 800;
+        letter-spacing: 1.3px;
+        text-transform: uppercase;
+    }
+
+    .verification-eyebrow-dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: var(--verify-gold);
+        box-shadow: 0 0 10px rgba(255, 212, 0, .7);
+    }
+
+    .verification-brand-content h1 {
+        max-width: 350px;
+        margin: 22px 0 16px;
+        color: #fff;
+        font-size: clamp(30px, 4vw, 43px);
+        font-weight: 850;
+        letter-spacing: -1.7px;
+        line-height: 1.12;
+    }
+
+    .verification-brand-content h1 span {
+        color: var(--verify-gold);
+    }
+
+    .verification-brand-content > p {
+        max-width: 325px;
+        margin: 0;
+        color: #b7b7b7;
+        font-size: 14px;
+        line-height: 1.9;
+    }
+
+    .verification-benefits {
+        display: grid;
+        gap: 17px;
+        margin-top: 34px;
+    }
+
+    .verification-benefit {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        color: #e5e5e5;
+        font-size: 12px;
+    }
+
+    .verification-benefit-icon {
+        width: 34px;
+        height: 34px;
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid #363636;
+        border-radius: 10px;
+        background: #222;
+        color: var(--verify-gold);
+        font-size: 15px;
+    }
+
+    .verification-brand-footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding-top: 20px;
+        border-top: 1px solid #343434;
+        color: #8f8f8f;
+        font-size: 11px;
+    }
+
+    .verification-security-label {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        color: #c9c9c9;
+    }
+
+    .verification-security-label span {
+        color: #63d99b;
+    }
+
+    /* VERIFICATION FORM */
+
+    .verification-form-panel {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 42px;
+        background: #fff;
+    }
+
+    .verification-form-content {
+        width: 100%;
+        max-width: 390px;
+    }
+
+    .verification-mobile-brand {
+        display: none;
+    }
+
+    .verification-step {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 26px;
+        color: #888;
+        font-size: 11px;
+        font-weight: 750;
+        letter-spacing: .7px;
+        text-transform: uppercase;
+    }
+
+    .verification-step-number {
+        width: 26px;
+        height: 26px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        background: #fff7cc;
+        color: #5d4b00;
+        font-size: 12px;
+        font-weight: 850;
+    }
+
+    .verification-heading {
+        margin: 0 0 11px;
+        color: var(--verify-ink);
+        font-size: 30px;
+        font-weight: 850;
+        letter-spacing: -1.1px;
+        line-height: 1.2;
+    }
+
+    .verification-description {
+        margin: 0;
+        color: var(--verify-muted);
+        font-size: 13px;
+        line-height: 1.9;
+    }
+
+    .verification-email-card {
+        display: flex;
+        align-items: center;
+        gap: 13px;
+        margin-top: 25px;
+        padding: 15px;
+        border: 1px solid var(--verify-border);
+        border-radius: 14px;
+        background: #fafafa;
+    }
+
+    .verification-email-icon {
+        width: 43px;
+        height: 43px;
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 12px;
+        background: #fff1a3;
+        font-size: 19px;
+    }
+
+    .verification-email-details {
+        min-width: 0;
+    }
+
+    .verification-email-label {
+        margin-bottom: 5px;
+        color: #8a8a8a;
+        font-size: 10px;
+        font-weight: 800;
+        letter-spacing: .8px;
+        text-transform: uppercase;
+    }
+
+    .verification-email-address {
+        overflow-wrap: anywhere;
+        color: #292929;
+        font-size: 13px;
+        font-weight: 750;
+    }
+
+    .verification-form {
+        margin-top: 28px;
+    }
+
+    .verification-label-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        margin-bottom: 12px;
+    }
+
+    .verification-label {
+        color: #292929;
+        font-size: 13px;
+        font-weight: 800;
+    }
+
+    .verification-code-hint {
+        color: #999;
+        font-size: 10px;
+    }
+
+    .verification-code-input {
+        width: 100%;
+        height: 67px;
+        padding: 10px 14px;
+        border: 1.5px solid #dedee3;
+        border-radius: 14px;
+        outline: none;
+        background: #fbfbfc;
+        color: #171717;
+        font-family: inherit;
+        font-size: 27px;
+        font-weight: 800;
+        letter-spacing: 12px;
+        text-align: center;
+        transition: border-color .2s ease,
+                    box-shadow .2s ease,
+                    background .2s ease;
+    }
+
+    .verification-code-input::placeholder {
+        color: #d3d3d7;
+        letter-spacing: 9px;
+    }
+
+    .verification-code-input:focus {
+        border-color: var(--verify-gold-dark);
+        background: #fff;
+        box-shadow: 0 0 0 4px rgba(255, 212, 0, .15);
+    }
+
+    .verification-code-input.invalid {
+        border-color: var(--verify-danger);
+        box-shadow: 0 0 0 3px rgba(217, 48, 37, .08);
+    }
+
+    .verification-input-help {
+        margin-top: 9px;
+        color: #898989;
+        font-size: 11px;
+        line-height: 1.7;
+    }
+
+    .verification-submit {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 9px;
+        width: 100%;
+        min-height: 53px;
+        margin-top: 23px;
+        padding: 14px 18px;
+        border: none;
+        border-radius: 12px;
+        background: var(--verify-gold);
+        color: #171717;
+        font-family: inherit;
+        font-size: 14px;
+        font-weight: 850;
+        cursor: pointer;
+        box-shadow: 0 7px 17px rgba(255, 212, 0, .17);
+        transition: background .2s ease,
+                    transform .2s ease,
+                    box-shadow .2s ease;
+    }
+
+    .verification-submit:hover {
+        transform: translateY(-2px);
+        background: #f5ca00;
+        box-shadow: 0 10px 22px rgba(255, 212, 0, .24);
+    }
+
+    .verification-submit:active {
+        transform: translateY(0);
+    }
+
+    .verification-submit:focus-visible,
+    .verification-resend-button:focus-visible {
+        outline: 3px solid rgba(230, 191, 0, .45);
+        outline-offset: 3px;
+    }
+
+    .verification-arrow {
+        font-size: 18px;
+        transition: transform .2s ease;
+    }
+
+    .verification-submit:hover .verification-arrow {
+        transform: translateX(3px);
+    }
+
+    .verification-divider {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin: 25px 0 19px;
+        color: #aaa;
+        font-size: 10px;
+    }
+
+    .verification-divider::before,
+    .verification-divider::after {
+        content: "";
+        flex: 1;
+        height: 1px;
+        background: #ededf0;
+    }
+
+    .verification-resend-area {
+        text-align: center;
+    }
+
+    .verification-resend-area p {
+        margin: 0 0 8px;
+        color: #777;
+        font-size: 12px;
+    }
+
+    .verification-resend-form {
+        margin: 0;
+    }
+
+    .verification-resend-button {
+        padding: 5px 8px;
+        border: none;
+        border-radius: 6px;
+        background: transparent;
+        color: #262626;
+        font-family: inherit;
+        font-size: 12px;
+        font-weight: 850;
+        cursor: pointer;
+        text-decoration: underline;
+        text-decoration-color: #d6b300;
+        text-underline-offset: 4px;
+    }
+
+    .verification-resend-button:hover {
+        color: #8b7200;
+    }
+
+    .verification-expiry {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        margin-top: 25px;
+        padding: 13px;
+        border: 1px solid #f0e7bd;
+        border-radius: 12px;
+        background: #fffcf0;
+        color: #796a2d;
+        font-size: 11px;
+        line-height: 1.7;
+    }
+
+    .verification-expiry-icon {
+        flex-shrink: 0;
+        font-size: 15px;
+    }
+
+    .verification-bottom {
+        margin-top: 25px;
+        padding-top: 20px;
+        border-top: 1px solid #f0f0f2;
+        color: #999;
+        font-size: 10px;
+        line-height: 1.8;
+        text-align: center;
+    }
+
+    .verification-bottom strong {
+        color: #626262;
+    }
+
+    /* FLASH MESSAGES */
+
+    .verification-flash {
+        margin-bottom: 18px;
+        padding: 12px 14px;
+        border: 1px solid #f0df9b;
+        border-radius: 10px;
+        background: #fffbea;
+        color: #705d0a;
+        font-size: 12px;
+        line-height: 1.7;
+        overflow-wrap: anywhere;
+    }
+
+    .verification-flash.error {
+        border-color: #f3c6c3;
+        background: #fff4f3;
+        color: #a32920;
+    }
+
+    .verification-flash.success {
+        border-color: #bce8d0;
+        background: #f0fbf5;
+        color: #176b43;
+    }
+
+    /* RESPONSIVE DESIGN */
+
+    @media (max-width: 760px) {
+        .verification-page {
+            min-height: calc(100vh - 65px);
+            padding: 24px 14px;
+        }
+
+        .verification-shell {
+            max-width: 470px;
+            grid-template-columns: 1fr;
+            border-radius: 22px;
+        }
+
+        .verification-brand-panel {
+            display: none;
+        }
+
+        .verification-form-panel {
+            padding: 30px 25px;
+        }
+
+        .verification-mobile-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 33px;
+        }
+
+        .verification-mobile-brand .verification-brand-mark {
+            width: 39px;
+            height: 39px;
+            border-radius: 11px;
+            font-size: 20px;
+        }
+
+        .verification-mobile-brand .verification-brand-name {
+            color: #171717;
+            font-size: 20px;
+        }
+
+        .verification-mobile-brand .verification-brand-caption {
+            color: #888;
+            font-size: 9px;
+        }
+
+        .verification-heading {
+            font-size: 27px;
+        }
+
+        .verification-form-content {
+            max-width: 100%;
+        }
+    }
+
+    @media (max-width: 380px) {
+        .verification-form-panel {
+            padding: 25px 18px;
+        }
+
+        .verification-code-input {
+            height: 60px;
+            font-size: 23px;
+            letter-spacing: 9px;
+        }
+
+        .verification-label-row {
+            align-items: flex-start;
+            flex-direction: column;
+            gap: 5px;
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .verification-page *,
+        .verification-page *::before,
+        .verification-page *::after {
+            transition: none !important;
+            animation: none !important;
+            scroll-behavior: auto !important;
+        }
+    }
+</style><div class="verification-page"><div class="verification-shell">
+
+    <!-- BRAND PANEL -->
+
+    <aside class="verification-brand-panel">
+
+        <div class="verification-brand">
+
+            <div class="verification-brand-mark">D</div>
+
+            <div>
+                <div class="verification-brand-name">DataHub</div>
+
+                <span class="verification-brand-caption">
+                    Digital services, simplified
+                </span>
+            </div>
+
+        </div>
+
+        <div class="verification-brand-content">
+
+            <div class="verification-eyebrow">
+                <span class="verification-eyebrow-dot"></span>
+                Account protection
+            </div>
+
+            <h1>
+                One last step.<br>
+                <span>Then you're in.</span>
+            </h1>
+
+            <p>
+                Verify your email address to complete your registration
+                and get started with your DataHub account.
+            </p>
+
+            <div class="verification-benefits">
+
+                <div class="verification-benefit">
+                    <div class="verification-benefit-icon">✓</div>
+                    <span>Confirm your email address</span>
+                </div>
+
+                <div class="verification-benefit">
+                    <div class="verification-benefit-icon">⌑</div>
+                    <span>Add an extra layer of account security</span>
+                </div>
+
+                <div class="verification-benefit">
+                    <div class="verification-benefit-icon">→</div>
+                    <span>Continue to your DataHub dashboard</span>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="verification-brand-footer">
+
+            <span>© {{ now.year if now is defined else 2026 }} DataHub</span>
+
+            <span class="verification-security-label">
+                <span>●</span> Secure verification
+            </span>
+
+        </div>
+
+    </aside>
+
+
+    <!-- VERIFICATION FORM PANEL -->
+
+    <main class="verification-form-panel">
+
+        <div class="verification-form-content">
+
+            <!-- MOBILE BRAND -->
+
+            <div class="verification-mobile-brand">
+
+                <div class="verification-brand-mark">D</div>
+
+                <div>
+                    <div class="verification-brand-name">DataHub</div>
+
+                    <span class="verification-brand-caption">
+                        Digital services, simplified
+                    </span>
+                </div>
+
+            </div>
+
+
+            <div class="verification-step">
+                <span class="verification-step-number">1</span>
+                Email confirmation
+            </div>
+
+
+            <h2 class="verification-heading">
+                Verify your email
+            </h2>
+
+            <p class="verification-description">
+                We've sent a six-digit code to your inbox.
+                Enter it below to confirm your email and finish
+                creating your account.
+            </p>
+
+
+            <!-- EMAIL ADDRESS -->
+
+            <div class="verification-email-card">
+
+                <div class="verification-email-icon">✉</div>
+
+                <div class="verification-email-details">
+
+                    <div class="verification-email-label">
+                        Verification email
+                    </div>
+
+                    <div class="verification-email-address">
+                        {{ email }}
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- FLASH MESSAGES -->
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+
+                {% if messages %}
+
+                    <div style="margin-top: 20px;">
+
+                        {% for category, message in messages %}
+
+                            <div class="verification-flash {{ category }}">
+                                {{ message }}
+                            </div>
+
+                        {% endfor %}
+
+                    </div>
+
+                {% endif %}
+
+            {% endwith %}
+
+
+            <!-- CODE FORM -->
+
+            <form
+                method="post"
+                action="{{ url_for('verify_email') }}"
+                class="verification-form"
+                id="verificationForm"
+            >
+
+                <div class="verification-label-row">
+
+                    <label
+                        for="verification_code"
+                        class="verification-label"
+                    >
+                        Enter verification code
+                    </label>
+
+                    <span class="verification-code-hint">
+                        6 digits
+                    </span>
+
+                </div>
+
+                <input
+                    id="verification_code"
+                    name="verification_code"
+                    type="text"
+                    inputmode="numeric"
+                    pattern="[0-9]{6}"
+                    minlength="6"
+                    maxlength="6"
+                    autocomplete="one-time-code"
+                    placeholder="000000"
+                    class="verification-code-input"
+                    aria-describedby="verificationHelp"
+                    required
+                    autofocus
+                >
+
+                <div
+                    id="verificationHelp"
+                    class="verification-input-help"
+                >
+                    Check your inbox and spam folder if you can't
+                    find the email.
+                </div>
+
+                <button
+                    type="submit"
+                    class="verification-submit"
+                    id="verifyButton"
+                >
+                    <span>Verify and continue</span>
+
+                    <span class="verification-arrow" aria-hidden="true">
+                        →
+                    </span>
+                </button>
+
+            </form>
+
+
+            <div class="verification-divider">
+                HAVEN'T RECEIVED A CODE?
+            </div>
+
+
+            <!-- RESEND FORM -->
+
+            <div class="verification-resend-area">
+
+                <p>
+                    Check your spam folder before requesting another code.
+                </p>
+
+                <form
+                    method="post"
+                    action="{{ url_for('resend_verification') }}"
+                    class="verification-resend-form"
+                >
+
+                    <button
+                        type="submit"
+                        class="verification-resend-button"
+                    >
+                        Send me a new code
+                    </button>
+
+                </form>
+
+            </div>
+
+
+            <!-- EXPIRY NOTICE -->
+
+            <div class="verification-expiry">
+
+                <span
+                    class="verification-expiry-icon"
+                    aria-hidden="true"
+                >
+                    ◷
+                </span>
+
+                <span>
+                    <strong>Security reminder:</strong>
+                    Your code expires after 10 minutes.
+                    Never share it with anyone.
+                </span>
+
+            </div>
+
+
+            <div class="verification-bottom">
+                Protected by DataHub's email verification process.<br>
+                <strong>Keep your account secure.</strong>
+            </div>
+
+        </div>
+
+    </main>
+
+</div>
+
+</div><script>
+(function () {
+    "use strict";
+
+    const form = document.getElementById("verificationForm");
+    const codeInput = document.getElementById("verification_code");
+    const verifyButton = document.getElementById("verifyButton");
+
+    if (!form || !codeInput || !verifyButton) {
+        return;
+    }
+
+    // Accept digits only and limit the code to six characters.
+    codeInput.addEventListener("input", function () {
+        this.value = this.value.replace(/\D/g, "").slice(0, 6);
+        this.classList.remove("invalid");
+        this.setCustomValidity("");
+    });
+
+    form.addEventListener("submit", function (event) {
+        const code = codeInput.value.trim();
+
+        if (!/^\d{6}$/.test(code)) {
+            event.preventDefault();
+
+            codeInput.classList.add("invalid");
+
+            codeInput.setCustomValidity(
+                "Please enter all six digits of your verification code."
+            );
+
+            codeInput.reportValidity();
+            codeInput.focus();
+
+            return;
+        }
+
+        // Prevent accidental double submissions.
+        verifyButton.disabled = true;
+        verifyButton.style.opacity = "0.75";
+        verifyButton.style.cursor = "wait";
+
+        verifyButton.querySelector("span:first-child").textContent =
+            "Verifying...";
+    });
+
+})();
+</script>{% endblock %}

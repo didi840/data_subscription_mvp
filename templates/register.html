@@ -1,0 +1,603 @@
+{% extends "base.html" %}
+
+{% block title %}Create Account{% endblock %}
+
+{% block content %}
+
+<style>
+    .register-page {
+        min-height: calc(100vh - 80px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 30px 20px;
+        box-sizing: border-box;
+    }
+
+    .register-container {
+        width: 100%;
+        max-width: 430px;
+    }
+
+    .register-brand {
+        text-align: center;
+        margin-bottom: 24px;
+    }
+
+    .brand-icon {
+        width: 64px;
+        height: 64px;
+        margin: 0 auto 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #ffd400;
+        color: #222;
+        border-radius: 18px;
+        font-size: 28px;
+        font-weight: 800;
+        box-shadow: 0 8px 20px rgba(255, 212, 0, 0.25);
+    }
+
+    .register-brand h1 {
+        margin: 0;
+        color: #222;
+        font-size: 27px;
+        font-weight: 800;
+    }
+
+    .register-brand p {
+        margin: 7px 0 0;
+        color: #888;
+        font-size: 13px;
+    }
+
+    .register-card {
+        background: #fff;
+        border-radius: 20px;
+        padding: 30px;
+        box-shadow: 0 8px 35px rgba(0, 0, 0, 0.09);
+        border: 1px solid #eee;
+    }
+
+    .register-card h2 {
+        margin: 0 0 7px;
+        color: #222;
+        font-size: 22px;
+    }
+
+    .register-description {
+        margin: 0 0 25px;
+        color: #888;
+        font-size: 13px;
+        line-height: 1.5;
+    }
+
+    .form-group {
+        margin-bottom: 18px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        color: #333;
+        font-size: 13px;
+        font-weight: 700;
+    }
+
+    .input-box {
+        position: relative;
+    }
+
+    .input-icon {
+        position: absolute;
+        left: 14px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #999;
+        font-size: 16px;
+        pointer-events: none;
+    }
+
+    .register-card input {
+        width: 100%;
+        box-sizing: border-box;
+        padding: 14px 45px 14px 43px;
+        border: 1px solid #ddd;
+        border-radius: 11px;
+        background: #fafafa;
+        color: #222;
+        font-size: 14px;
+        outline: none;
+        transition: 0.2s;
+    }
+
+    .register-card input:focus {
+        background: #fff;
+        border-color: #ffd400;
+        box-shadow: 0 0 0 3px rgba(255, 212, 0, 0.15);
+    }
+
+    .register-card input::placeholder {
+        color: #aaa;
+    }
+
+    .password-toggle {
+        position: absolute;
+        right: 13px;
+        top: 50%;
+        transform: translateY(-50%);
+        border: none;
+        background: transparent;
+        cursor: pointer;
+        font-size: 17px;
+        padding: 3px;
+    }
+
+    .input-error {
+        display: none;
+        margin-top: 7px;
+        color: #d93025;
+        font-size: 11px;
+        line-height: 1.4;
+    }
+
+    .input-error.show {
+        display: block;
+    }
+
+    .password-note {
+        margin-top: 7px;
+        color: #999;
+        font-size: 11px;
+    }
+
+    .register-btn {
+        width: 100%;
+        margin-top: 4px;
+        padding: 15px;
+        border: none;
+        border-radius: 11px;
+        background: #ffd400;
+        color: #222;
+        font-size: 15px;
+        font-weight: 800;
+        cursor: pointer;
+        transition: 0.2s;
+    }
+
+    .register-btn:hover {
+        background: #f2c800;
+        transform: translateY(-1px);
+    }
+
+    .login-link {
+        margin-top: 20px;
+        text-align: center;
+        color: #888;
+        font-size: 13px;
+    }
+
+    .login-link a {
+        color: #222;
+        font-weight: 800;
+        text-decoration: none;
+    }
+
+    .login-link a:hover {
+        text-decoration: underline;
+    }
+
+    .register-footer {
+        margin-top: 20px;
+        text-align: center;
+        color: #999;
+        font-size: 12px;
+    }
+
+    @media (max-width: 600px) {
+
+        .register-page {
+            min-height: calc(100vh - 70px);
+            padding: 20px 15px;
+        }
+
+        .register-brand {
+            margin-bottom: 18px;
+        }
+
+        .brand-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 15px;
+            font-size: 24px;
+        }
+
+        .register-brand h1 {
+            font-size: 24px;
+        }
+
+        .register-card {
+            padding: 24px 18px;
+            border-radius: 16px;
+        }
+
+        .register-card h2 {
+            font-size: 20px;
+        }
+    }
+</style>
+
+
+<div class="register-page">
+
+    <div class="register-container">
+
+        <!-- Brand -->
+
+        <div class="register-brand">
+
+            <div class="brand-icon">
+                D
+            </div>
+
+            <h1>DataHub</h1>
+
+            <p>
+                Fast, reliable digital services
+            </p>
+
+        </div>
+
+
+        <!-- Registration Card -->
+
+        <div class="register-card">
+
+            <h2>
+                Create your account
+            </h2>
+
+            <p class="register-description">
+                Create a DataHub account to buy data, airtime and access our digital services.
+            </p>
+
+
+            <form method="post" id="registerForm">
+
+                <!-- Full Name -->
+
+                <div class="form-group">
+
+                    <label for="name">
+                        Full Name
+                    </label>
+
+                    <div class="input-box">
+
+                        <span class="input-icon">
+                            👤
+                        </span>
+
+                        <input
+                            id="name"
+                            name="name"
+                            type="text"
+                            placeholder="Enter your full name"
+                            autocomplete="name"
+                            required
+                        >
+
+                    </div>
+
+                    <div class="input-error" id="nameError">
+                        Please enter your full name.
+                    </div>
+
+                </div>
+
+
+                <!-- Phone Number -->
+
+                <div class="form-group">
+
+                    <label for="phone">
+                        Phone Number
+                    </label>
+
+                    <div class="input-box">
+
+                        <span class="input-icon">
+                            📱
+                        </span>
+
+                        <input
+                            id="phone"
+                            name="phone"
+                            type="tel"
+                            placeholder="08012345678"
+                            autocomplete="tel"
+                            inputmode="numeric"
+                            maxlength="11"
+                            required
+                        >
+
+                    </div>
+
+                    <div class="input-error" id="phoneError">
+                        Enter a valid Nigerian phone number, e.g. 08012345678.
+                    </div>
+
+                </div>
+
+
+                <!-- Email -->
+
+                <div class="form-group">
+
+                    <label for="email">
+                        Email Address
+                    </label>
+
+                    <div class="input-box">
+
+                        <span class="input-icon">
+                            ✉
+                        </span>
+
+                        <input
+                            id="email"
+                            name="email"
+                            type="email"
+                            placeholder="Enter your email"
+                            autocomplete="email"
+                            required
+                        >
+
+                    </div>
+
+                    <div class="input-error" id="emailError">
+                        Please enter a valid email address.
+                    </div>
+
+                </div>
+
+
+                <!-- Password -->
+
+                <div class="form-group">
+
+                    <label for="password">
+                        Password
+                    </label>
+
+                    <div class="input-box">
+
+                        <span class="input-icon">
+                            🔒
+                        </span>
+
+                        <input
+                            id="password"
+                            name="password"
+                            type="password"
+                            placeholder="Create a password"
+                            autocomplete="new-password"
+                            minlength="6"
+                            required
+                        >
+
+                        <button
+                            type="button"
+                            class="password-toggle"
+                            onclick="togglePassword('password', this)"
+                            aria-label="Show password"
+                        >
+                            👁️
+                        </button>
+
+                    </div>
+
+                    <div class="password-note">
+                        Password should be at least 6 characters.
+                    </div>
+
+                    <div class="input-error" id="passwordError">
+                        Password must be at least 6 characters.
+                    </div>
+
+                </div>
+
+
+                <!-- Confirm Password -->
+
+                <div class="form-group">
+
+                    <label for="confirm_password">
+                        Confirm Password
+                    </label>
+
+                    <div class="input-box">
+
+                        <span class="input-icon">
+                            🔒
+                        </span>
+
+                        <input
+                            id="confirm_password"
+                            name="confirm_password"
+                            type="password"
+                            placeholder="Re-enter your password"
+                            autocomplete="new-password"
+                            required
+                        >
+
+                        <button
+                            type="button"
+                            class="password-toggle"
+                            onclick="togglePassword('confirm_password', this)"
+                            aria-label="Show password"
+                        >
+                            👁️
+                        </button>
+
+                    </div>
+
+                    <div class="input-error" id="confirmPasswordError">
+                        Passwords do not match.
+                    </div>
+
+                </div>
+
+
+                <!-- Register -->
+
+                <button
+                    type="submit"
+                    class="register-btn"
+                >
+                    Create Account
+                </button>
+
+            </form>
+
+
+            <!-- Login -->
+
+            <div class="login-link">
+
+                Already have an account?
+
+                <a href="{{ url_for('login') }}">
+                    Sign In
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <div class="register-footer">
+            © DataHub. Secure digital services.
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+function togglePassword(inputId, button) {
+
+    const input = document.getElementById(inputId);
+
+    if (input.type === "password") {
+
+        input.type = "text";
+        button.textContent = "🙈";
+
+    } else {
+
+        input.type = "password";
+        button.textContent = "👁️";
+
+    }
+}
+
+
+document
+    .getElementById("registerForm")
+    .addEventListener("submit", function(event) {
+
+        let valid = true;
+
+        const name = document.getElementById("name");
+        const phone = document.getElementById("phone");
+        const email = document.getElementById("email");
+        const password = document.getElementById("password");
+        const confirmPassword = document.getElementById("confirm_password");
+
+        const nameError = document.getElementById("nameError");
+        const phoneError = document.getElementById("phoneError");
+        const emailError = document.getElementById("emailError");
+        const passwordError = document.getElementById("passwordError");
+        const confirmPasswordError =
+            document.getElementById("confirmPasswordError");
+
+
+        // Hide all errors
+
+        document.querySelectorAll(".input-error").forEach(function(error) {
+            error.classList.remove("show");
+        });
+
+
+        // Full name
+
+        if (name.value.trim().length < 2) {
+
+            nameError.classList.add("show");
+            valid = false;
+
+        }
+
+
+        // Nigerian phone number
+
+        const phonePattern = /^(070|071|080|081|090|091|080|070|081|090|091)\d{8}$/;
+
+        if (!phonePattern.test(phone.value.trim())) {
+
+            phoneError.classList.add("show");
+            valid = false;
+
+        }
+
+
+        // Email
+
+        const emailPattern =
+            /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+        if (!emailPattern.test(email.value.trim())) {
+
+            emailError.classList.add("show");
+            valid = false;
+
+        }
+
+
+        // Password
+
+        if (password.value.length < 6) {
+
+            passwordError.classList.add("show");
+            valid = false;
+
+        }
+
+
+        // Confirm password
+
+        if (
+            password.value !== confirmPassword.value
+        ) {
+
+            confirmPasswordError.classList.add("show");
+            valid = false;
+
+        }
+
+
+        if (!valid) {
+
+            event.preventDefault();
+
+        }
+
+    });
+
+</script>
+
+{% endblock %}

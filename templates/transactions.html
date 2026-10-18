@@ -1,0 +1,238 @@
+{% extends "base.html" %}
+
+{% block title %}Transactions{% endblock %}
+
+{% block content %}
+
+<style>
+    .page-header {
+        margin-bottom: 22px;
+    }
+
+    .page-header h2 {
+        margin: 0 0 7px;
+        font-size: 24px;
+        color: #222;
+    }
+
+    .page-header p {
+        margin: 0;
+        color: #777;
+        font-size: 14px;
+    }
+
+    .transactions-card {
+        background: #fff;
+        border-radius: 18px;
+        padding: 22px;
+        box-shadow: 0 5px 25px rgba(0, 0, 0, 0.07);
+        overflow: hidden;
+    }
+
+    .table-wrapper {
+        width: 100%;
+        overflow-x: auto;
+    }
+
+    .transactions-table {
+        width: 100%;
+        min-width: 850px;
+        border-collapse: collapse;
+    }
+
+    .transactions-table th {
+        padding: 14px 12px;
+        background: #f7f7f7;
+        color: #555;
+        font-size: 12px;
+        font-weight: 700;
+        text-align: left;
+        white-space: nowrap;
+        border-bottom: 1px solid #eee;
+    }
+
+    .transactions-table td {
+        padding: 15px 12px;
+        color: #333;
+        font-size: 13px;
+        border-bottom: 1px solid #f0f0f0;
+        white-space: nowrap;
+    }
+
+    .transactions-table tr:last-child td {
+        border-bottom: none;
+    }
+
+    .transactions-table tr:hover td {
+        background: #fffdf0;
+    }
+
+    .reference {
+        font-weight: 600;
+        color: #222;
+    }
+
+    .amount {
+        font-weight: 700;
+        color: #222;
+    }
+
+    .status {
+        display: inline-block;
+        padding: 5px 10px;
+        border-radius: 20px;
+        background: #eaf8ef;
+        color: #21864a;
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: capitalize;
+    }
+
+    .mode {
+        color: #777;
+        font-size: 12px;
+        text-transform: capitalize;
+    }
+
+    .date {
+        color: #777;
+        font-size: 12px;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 50px 20px;
+    }
+
+    .empty-icon {
+        width: 55px;
+        height: 55px;
+        margin: 0 auto 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #fff9d9;
+        border-radius: 50%;
+        font-size: 24px;
+    }
+
+    .empty-state h3 {
+        margin: 0 0 7px;
+        color: #333;
+        font-size: 17px;
+    }
+
+    .empty-state p {
+        margin: 0;
+        color: #888;
+        font-size: 13px;
+    }
+
+    @media (max-width: 600px) {
+
+        .page-header h2 {
+            font-size: 21px;
+        }
+
+        .transactions-card {
+            padding: 15px;
+            border-radius: 15px;
+        }
+
+        .transactions-table {
+            min-width: 800px;
+        }
+    }
+</style><div class="page-header"><h2>Transaction History</h2>
+
+<p>
+    View and track your recent wallet and service transactions.
+</p>
+
+</div><div class="transactions-card">{% if transactions %}
+
+    <div class="table-wrapper">
+
+        <table class="transactions-table">
+
+            <thead>
+
+                <tr>
+                    <th>Reference</th>
+                    <th>Network / Type</th>
+                    <th>Plan</th>
+                    <th>Amount</th>
+                    <th>Status</th>
+                    <th>Mode</th>
+                    <th>Date</th>
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                {% for t in transactions %}
+
+                <tr>
+
+                    <td class="reference">
+                        {{ t.get('reference', '-') }}
+                    </td>
+
+                    <td>
+                        {{ t.get('network', 'Wallet funding') }}
+                    </td>
+
+                    <td>
+                        {{ t.get('plan', '-') }}
+                    </td>
+
+                    <td class="amount">
+                        ₦{{ "{:,.0f}".format(t.amount) }}
+                    </td>
+
+                    <td>
+
+                        <span class="status">
+                            {{ t.status }}
+                        </span>
+
+                    </td>
+
+                    <td class="mode">
+                        {{ t.get('mode', '-') }}
+                    </td>
+
+                    <td class="date">
+                        {{ t.created_at.strftime('%Y-%m-%d %H:%M') }}
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+{% else %}
+
+    <div class="empty-state">
+
+        <div class="empty-icon">
+            ₦
+        </div>
+
+        <h3>No Transactions Yet</h3>
+
+        <p>
+            Your completed wallet and service transactions will appear here.
+        </p>
+
+    </div>
+
+{% endif %}
+
+</div>{% endblock %}

@@ -1,0 +1,399 @@
+{% extends "base.html" %}
+
+{% block title %}Airtime to Cash{% endblock %}
+
+{% block content %}
+
+<style>
+    .page-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 22px;
+    }
+
+    .back-btn {
+        width: 38px;
+        height: 38px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #f1f1f1;
+        color: #222;
+        border-radius: 10px;
+        text-decoration: none;
+        font-size: 20px;
+        font-weight: bold;
+    }
+
+    .page-header h2 {
+        margin: 0;
+        font-size: 22px;
+    }
+
+    .form-card {
+        max-width: 600px;
+        margin: 0 auto;
+        background: #fff;
+        border-radius: 18px;
+        padding: 28px;
+        box-shadow: 0 5px 25px rgba(0, 0, 0, 0.07);
+    }
+
+    .form-card h2 {
+        margin: 0 0 8px;
+        font-size: 24px;
+        color: #222;
+    }
+
+    .form-subtitle {
+        margin: 0 0 24px;
+        color: #777;
+        font-size: 14px;
+        line-height: 1.6;
+    }
+
+    .info-box {
+        margin-bottom: 25px;
+        padding: 16px;
+        background: #fff9d9;
+        border: 1px solid #f1df70;
+        border-radius: 12px;
+    }
+
+    .info-box strong {
+        display: block;
+        margin-bottom: 5px;
+        color: #5f5300;
+        font-size: 14px;
+    }
+
+    .info-box p {
+        margin: 0;
+        color: #756900;
+        font-size: 13px;
+        line-height: 1.5;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-card label {
+        display: block;
+        margin-bottom: 8px;
+        font-size: 14px;
+        font-weight: 600;
+        color: #333;
+    }
+
+    .input-wrapper {
+        position: relative;
+    }
+
+    .input-wrapper::after {
+        content: "⌄";
+        position: absolute;
+        right: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #777;
+        font-size: 18px;
+        pointer-events: none;
+    }
+
+    .form-card select,
+    .form-card input {
+        width: 100%;
+        box-sizing: border-box;
+        padding: 14px;
+        border: 1px solid #ddd;
+        border-radius: 11px;
+        background: #fff;
+        color: #222;
+        font-size: 14px;
+        outline: none;
+        transition: 0.2s;
+    }
+
+    .form-card select {
+        padding-right: 42px;
+        appearance: none;
+        -webkit-appearance: none;
+        cursor: pointer;
+    }
+
+    .form-card select:focus,
+    .form-card input:focus {
+        border-color: #ffd400;
+        box-shadow: 0 0 0 3px rgba(255, 212, 0, 0.15);
+    }
+
+    .form-card input::placeholder {
+        color: #aaa;
+    }
+
+    .helper-text {
+        margin-top: 7px;
+        font-size: 12px;
+        color: #888;
+        line-height: 1.4;
+    }
+
+    .amount-box {
+        margin-top: 24px;
+        padding: 19px;
+        background: #f7f7f7;
+        border: 1px solid #eee;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .amount-label {
+        color: #666;
+        font-size: 14px;
+    }
+
+    .amount-value {
+        font-size: 23px;
+        font-weight: 700;
+        color: #222;
+    }
+
+    .primary-btn {
+        width: 100%;
+        margin-top: 20px;
+        padding: 15px;
+        border: none;
+        border-radius: 11px;
+        background: #ffd400;
+        color: #222;
+        font-size: 15px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: 0.2s;
+    }
+
+    .primary-btn:hover {
+        background: #f2c800;
+    }
+
+    .secure-note {
+        margin-top: 16px;
+        text-align: center;
+        color: #888;
+        font-size: 12px;
+        line-height: 1.5;
+    }
+
+    @media (max-width: 600px) {
+
+        .form-card {
+            padding: 22px 18px;
+            border-radius: 15px;
+        }
+
+        .form-card h2 {
+            font-size: 21px;
+        }
+
+        .page-header h2 {
+            font-size: 20px;
+        }
+    }
+</style><div class="page-header"><a href="{{ url_for('dashboard') }}" class="back-btn">
+    ←
+</a>
+
+<h2>Airtime to Cash</h2>
+
+</div><div class="form-card"><h2>Convert Airtime to Cash</h2>
+
+<p class="form-subtitle">
+    Convert your airtime balance into wallet credit quickly and conveniently.
+    Select your network, enter the airtime details, and review your expected wallet credit.
+</p>
+
+
+<!-- Conversion Information -->
+
+<div class="info-box">
+
+    <strong>
+        Conversion Rate: 80%
+    </strong>
+
+    <p>
+        You will receive 80% of the airtime amount as wallet credit.
+    </p>
+
+</div>
+
+
+<form method="POST">
+
+
+    <!-- Network -->
+
+    <div class="form-group">
+
+        <label for="network">
+            Network
+        </label>
+
+        <div class="input-wrapper">
+
+            <select
+                name="network"
+                id="network"
+                required
+            >
+
+                <option value="">
+                    Select your network
+                </option>
+
+                {% for network in networks %}
+
+                    <option value="{{ network }}">
+                        {{ network }}
+                    </option>
+
+                {% endfor %}
+
+            </select>
+
+        </div>
+
+        <div class="helper-text">
+            Select the network associated with the airtime you want to convert.
+        </div>
+
+    </div>
+
+
+    <!-- Phone Number -->
+
+    <div class="form-group">
+
+        <label for="phone">
+            Airtime Phone Number
+        </label>
+
+        <input
+            type="text"
+            name="phone"
+            id="phone"
+            placeholder="Enter your 11-digit phone number"
+            inputmode="numeric"
+            maxlength="11"
+            required
+        >
+
+        <div class="helper-text">
+            Enter the phone number on which the airtime is available.
+        </div>
+
+    </div>
+
+
+    <!-- Airtime Amount -->
+
+    <div class="form-group">
+
+        <label for="amount">
+            Airtime Amount
+        </label>
+
+        <input
+            type="number"
+            name="amount"
+            id="amount"
+            placeholder="Enter airtime amount"
+            min="500"
+            required
+        >
+
+        <div class="helper-text">
+            Minimum conversion amount: ₦500.
+        </div>
+
+    </div>
+
+
+    <!-- Wallet Credit -->
+
+    <div class="amount-box">
+
+        <span class="amount-label">
+            Estimated Wallet Credit
+        </span>
+
+        <strong
+            class="amount-value"
+            id="cashAmount"
+        >
+            ₦0
+        </strong>
+
+    </div>
+
+
+    <!-- Submit -->
+
+    <button
+        type="submit"
+        class="primary-btn"
+    >
+        Convert Airtime
+    </button>
+
+</form>
+
+
+<div class="secure-note">
+    The calculated amount represents the wallet credit after the 80% conversion rate is applied.
+</div>
+
+</div><script>
+
+const amountInput =
+    document.getElementById("amount");
+
+const cashAmount =
+    document.getElementById("cashAmount");
+
+
+amountInput.addEventListener(
+    "input",
+    function () {
+
+        const amount =
+            Number(this.value) || 0;
+
+
+        const cash =
+            Math.floor(
+                amount * 0.80
+            );
+
+
+        if (cash > 0) {
+
+            cashAmount.textContent =
+                "₦" +
+                cash.toLocaleString();
+
+        } else {
+
+            cashAmount.textContent =
+                "₦0";
+
+        }
+
+    }
+);
+
+</script>{% endblock %}

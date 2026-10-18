@@ -1,0 +1,585 @@
+{% extends "base.html" %}
+
+{% block title %}DataHub - Digital Services{% endblock %}
+
+{% block content %}
+
+<style>
+    .landing-page {
+        max-width: 1150px;
+        margin: 0 auto;
+    }
+
+    /* Hero */
+
+    .hero {
+        position: relative;
+        overflow: hidden;
+        background: #222;
+        border-radius: 24px;
+        padding: 65px 55px;
+        margin-bottom: 30px;
+        color: #fff;
+    }
+
+    .hero::after {
+        content: "D";
+        position: absolute;
+        right: 35px;
+        bottom: -55px;
+        font-size: 240px;
+        font-weight: 900;
+        color: rgba(255, 212, 0, 0.08);
+        line-height: 1;
+    }
+
+    .hero-content {
+        position: relative;
+        z-index: 2;
+        max-width: 650px;
+    }
+
+    .hero-badge {
+        display: inline-block;
+        padding: 7px 12px;
+        margin-bottom: 18px;
+        background: rgba(255, 212, 0, 0.15);
+        color: #ffd400;
+        border: 1px solid rgba(255, 212, 0, 0.3);
+        border-radius: 20px;
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .hero h1 {
+        margin: 0;
+        font-size: 44px;
+        line-height: 1.15;
+        font-weight: 800;
+    }
+
+    .hero h1 span {
+        color: #ffd400;
+    }
+
+    .hero p {
+        margin: 18px 0 28px;
+        max-width: 570px;
+        color: #ccc;
+        font-size: 16px;
+        line-height: 1.7;
+    }
+
+    .hero-buttons {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+
+    .hero-btn {
+        display: inline-block;
+        padding: 14px 22px;
+        border-radius: 11px;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 700;
+        transition: 0.2s;
+    }
+
+    .primary-btn {
+        background: #ffd400;
+        color: #222;
+    }
+
+    .primary-btn:hover {
+        background: #f2c800;
+        transform: translateY(-1px);
+    }
+
+    .secondary-btn {
+        background: transparent;
+        color: #fff;
+        border: 1px solid #555;
+    }
+
+    .secondary-btn:hover {
+        border-color: #ffd400;
+        color: #ffd400;
+    }
+
+
+    /* Services */
+
+    .section-heading {
+        margin-bottom: 18px;
+    }
+
+    .section-heading h2 {
+        margin: 0 0 6px;
+        color: #222;
+        font-size: 22px;
+    }
+
+    .section-heading p {
+        margin: 0;
+        color: #888;
+        font-size: 13px;
+    }
+
+    .services-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 15px;
+        margin-bottom: 30px;
+    }
+
+    .service-card {
+        background: #fff;
+        border: 1px solid #eee;
+        border-radius: 16px;
+        padding: 22px;
+        box-shadow: 0 4px 18px rgba(0, 0, 0, 0.04);
+        transition: 0.2s;
+    }
+
+    .service-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+    }
+
+    .service-icon {
+        width: 42px;
+        height: 42px;
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #fff9d9;
+        border-radius: 11px;
+        font-size: 19px;
+    }
+
+    .service-card h3 {
+        margin: 0 0 7px;
+        color: #222;
+        font-size: 15px;
+    }
+
+    .service-card p {
+        margin: 0;
+        color: #888;
+        font-size: 12px;
+        line-height: 1.6;
+    }
+
+
+    /* Why DataHub */
+
+    .features {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 15px;
+        margin-bottom: 30px;
+    }
+
+    .feature-card {
+        background: #fff;
+        border-radius: 16px;
+        padding: 22px;
+        border: 1px solid #eee;
+    }
+
+    .feature-card h3 {
+        margin: 0 0 7px;
+        color: #222;
+        font-size: 15px;
+    }
+
+    .feature-card p {
+        margin: 0;
+        color: #888;
+        font-size: 12px;
+        line-height: 1.6;
+    }
+
+
+    /* Bottom CTA */
+
+    .bottom-cta {
+        background: #fff9d9;
+        border: 1px solid #f1df70;
+        border-radius: 18px;
+        padding: 28px;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .bottom-cta h2 {
+        margin: 0 0 8px;
+        color: #222;
+        font-size: 22px;
+    }
+
+    .bottom-cta p {
+        margin: 0 0 18px;
+        color: #756900;
+        font-size: 13px;
+    }
+
+    .cta-btn {
+        display: inline-block;
+        padding: 13px 22px;
+        background: #ffd400;
+        color: #222;
+        border-radius: 10px;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 700;
+    }
+
+
+    /* Mobile */
+
+    @media (max-width: 900px) {
+
+        .services-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .features {
+            grid-template-columns: 1fr;
+        }
+    }
+
+
+    @media (max-width: 600px) {
+
+        .hero {
+            padding: 38px 22px;
+            border-radius: 18px;
+        }
+
+        .hero h1 {
+            font-size: 31px;
+        }
+
+        .hero p {
+            font-size: 14px;
+        }
+
+        .hero-buttons {
+            flex-direction: column;
+        }
+
+        .hero-btn {
+            text-align: center;
+        }
+
+        .services-grid {
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .service-card {
+            padding: 17px;
+        }
+
+        .service-card h3 {
+            font-size: 14px;
+        }
+
+        .section-heading h2 {
+            font-size: 20px;
+        }
+
+        .bottom-cta {
+            padding: 23px 17px;
+        }
+    }
+</style><div class="landing-page"><!-- Hero Section -->
+
+<section class="hero">
+
+    <div class="hero-content">
+
+        <div class="hero-badge">
+            Digital Services Made Simple
+        </div>
+
+        <h1>
+            Your everyday digital services,
+            <span>all in one place.</span>
+        </h1>
+
+        <p>
+            DataHub gives you a simple and convenient way to manage
+            data bundles, airtime, bills, subscriptions and other
+            essential digital services from one platform.
+        </p>
+
+
+        <div class="hero-buttons">
+
+            <a
+                class="hero-btn primary-btn"
+                href="{{ url_for('register') }}"
+            >
+                Create Your Account
+            </a>
+
+            <a
+                class="hero-btn secondary-btn"
+                href="{{ url_for('login') }}"
+            >
+                Sign In
+            </a>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- Services -->
+
+<div class="section-heading">
+
+    <h2>
+        Our Services
+    </h2>
+
+    <p>
+        Convenient digital services available through your DataHub account.
+    </p>
+
+</div>
+
+
+<div class="services-grid">
+
+
+    <div class="service-card">
+
+        <div class="service-icon">
+            📶
+        </div>
+
+        <h3>
+            Data Bundles
+        </h3>
+
+        <p>
+            Purchase affordable data plans across MTN, Airtel, Glo and 9mobile.
+        </p>
+
+    </div>
+
+
+    <div class="service-card">
+
+        <div class="service-icon">
+            📱
+        </div>
+
+        <h3>
+            Airtime
+        </h3>
+
+        <p>
+            Recharge your mobile line quickly and conveniently.
+        </p>
+
+    </div>
+
+
+    <div class="service-card">
+
+        <div class="service-icon">
+            📺
+        </div>
+
+        <h3>
+            Cable TV
+        </h3>
+
+        <p>
+            Manage your TV subscriptions and keep your entertainment active.
+        </p>
+
+    </div>
+
+
+    <div class="service-card">
+
+        <div class="service-icon">
+            💡
+        </div>
+
+        <h3>
+            Electricity
+        </h3>
+
+        <p>
+            Pay your electricity bills conveniently from your account.
+        </p>
+
+    </div>
+
+
+    <div class="service-card">
+
+        <div class="service-icon">
+            🎫
+        </div>
+
+        <h3>
+            Examination PIN
+        </h3>
+
+        <p>
+            Purchase supported examination result-checking PINs with ease.
+        </p>
+
+    </div>
+
+
+    <div class="service-card">
+
+        <div class="service-icon">
+            💰
+        </div>
+
+        <h3>
+            Airtime to Cash
+        </h3>
+
+        <p>
+            Convert eligible airtime into wallet credit through the platform.
+        </p>
+
+    </div>
+
+
+    <div class="service-card">
+
+        <div class="service-icon">
+            👛
+        </div>
+
+        <h3>
+            Digital Wallet
+        </h3>
+
+        <p>
+            Maintain your wallet balance and use it to pay for services.
+        </p>
+
+    </div>
+
+
+    <div class="service-card">
+
+        <div class="service-icon">
+            🧾
+        </div>
+
+        <h3>
+            Transaction History
+        </h3>
+
+        <p>
+            Keep track of your wallet activity and service transactions.
+        </p>
+
+    </div>
+
+</div>
+
+
+<!-- Why DataHub -->
+
+<div class="section-heading">
+
+    <h2>
+        Why Choose DataHub?
+    </h2>
+
+    <p>
+        Built to make everyday digital payments simple and convenient.
+    </p>
+
+</div>
+
+
+<div class="features">
+
+
+    <div class="feature-card">
+
+        <h3>
+            Simple to Use
+        </h3>
+
+        <p>
+            A clean and straightforward platform designed to make
+            your everyday transactions easier.
+        </p>
+
+    </div>
+
+
+    <div class="feature-card">
+
+        <h3>
+            Multiple Services
+        </h3>
+
+        <p>
+            Access data, airtime, bills, subscriptions and other
+            digital services from one account.
+        </p>
+
+    </div>
+
+
+    <div class="feature-card">
+
+        <h3>
+            Transaction Tracking
+        </h3>
+
+        <p>
+            Keep an organized record of your wallet activity and
+            completed service transactions.
+        </p>
+
+    </div>
+
+</div>
+
+
+<!-- Bottom CTA -->
+
+<div class="bottom-cta">
+
+    <h2>
+        Ready to get started?
+    </h2>
+
+    <p>
+        Create your DataHub account and access our digital services.
+    </p>
+
+    <a
+        href="{{ url_for('register') }}"
+        class="cta-btn"
+    >
+        Create Account
+    </a>
+
+</div>
+
+</div>{% endblock %}

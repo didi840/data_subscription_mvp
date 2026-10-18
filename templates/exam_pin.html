@@ -1,0 +1,474 @@
+{% extends "base.html" %}
+
+{% block title %}Examination PIN{% endblock %}
+
+{% block content %}
+
+<style>
+    .page-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 22px;
+    }
+
+    .back-btn {
+        width: 38px;
+        height: 38px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #f1f1f1;
+        color: #222;
+        border-radius: 10px;
+        text-decoration: none;
+        font-size: 20px;
+        font-weight: bold;
+    }
+
+    .page-header h2 {
+        margin: 0;
+        font-size: 22px;
+    }
+
+    .form-card {
+        max-width: 600px;
+        margin: 0 auto;
+        background: #fff;
+        border-radius: 18px;
+        padding: 28px;
+        box-shadow: 0 5px 25px rgba(0, 0, 0, 0.07);
+    }
+
+    .form-card h2 {
+        margin: 0 0 8px;
+        font-size: 24px;
+        color: #222;
+    }
+
+    .form-subtitle {
+        margin: 0 0 26px;
+        color: #777;
+        font-size: 14px;
+        line-height: 1.6;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-card label {
+        display: block;
+        margin-bottom: 8px;
+        font-size: 14px;
+        font-weight: 600;
+        color: #333;
+    }
+
+    .input-wrapper {
+        position: relative;
+    }
+
+    .input-wrapper::after {
+        content: "⌄";
+        position: absolute;
+        right: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #777;
+        font-size: 18px;
+        pointer-events: none;
+    }
+
+    .form-card select,
+    .form-card input {
+        width: 100%;
+        box-sizing: border-box;
+        padding: 14px;
+        border: 1px solid #ddd;
+        border-radius: 11px;
+        background: #fff;
+        color: #222;
+        font-size: 14px;
+        outline: none;
+        transition: 0.2s;
+    }
+
+    .form-card select {
+        padding-right: 42px;
+        appearance: none;
+        -webkit-appearance: none;
+        cursor: pointer;
+    }
+
+    .form-card select:focus,
+    .form-card input:focus {
+        border-color: #ffd400;
+        box-shadow: 0 0 0 3px rgba(255, 212, 0, 0.15);
+    }
+
+    .form-card select:disabled {
+        background: #f5f5f5;
+        color: #999;
+        cursor: not-allowed;
+    }
+
+    .form-card input::placeholder {
+        color: #aaa;
+    }
+
+    .helper-text {
+        margin-top: 7px;
+        font-size: 12px;
+        color: #888;
+        line-height: 1.4;
+    }
+
+    .amount-box {
+        margin-top: 24px;
+        padding: 18px;
+        background: #f7f7f7;
+        border: 1px solid #eee;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .amount-label {
+        color: #666;
+        font-size: 14px;
+    }
+
+    .amount-value {
+        font-size: 22px;
+        font-weight: 700;
+        color: #222;
+    }
+
+    .primary-btn {
+        width: 100%;
+        margin-top: 20px;
+        padding: 15px;
+        border: none;
+        border-radius: 11px;
+        background: #ffd400;
+        color: #222;
+        font-size: 15px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: 0.2s;
+    }
+
+    .primary-btn:hover {
+        background: #f2c800;
+    }
+
+    .secure-note {
+        margin-top: 16px;
+        text-align: center;
+        color: #888;
+        font-size: 12px;
+    }
+
+    @media (max-width: 600px) {
+
+        .form-card {
+            padding: 22px 18px;
+            border-radius: 15px;
+        }
+
+        .form-card h2 {
+            font-size: 21px;
+        }
+
+        .page-header h2 {
+            font-size: 20px;
+        }
+    }
+</style><div class="page-header"><a href="{{ url_for('dashboard') }}" class="back-btn">
+    ←
+</a>
+
+<h2>Examination PIN</h2>
+
+</div><div class="form-card"><h2>Examination PIN</h2>
+
+<p class="form-subtitle">
+    Purchase examination result-checking PINs quickly and conveniently.
+    Select an examination body, choose your PIN type, and specify the quantity.
+</p>
+
+
+<form method="POST">
+
+
+    <!-- Examination Body -->
+
+    <div class="form-group">
+
+        <label for="exam">
+            Examination Body
+        </label>
+
+        <div class="input-wrapper">
+
+            <select
+                name="exam"
+                id="exam"
+                required
+            >
+
+                <option value="">
+                    Select examination body
+                </option>
+
+                {% for exam in exam_packages %}
+
+                    <option value="{{ exam }}">
+                        {{ exam }}
+                    </option>
+
+                {% endfor %}
+
+            </select>
+
+        </div>
+
+        <div class="helper-text">
+            Select the examination body for the PIN you need.
+        </div>
+
+    </div>
+
+
+    <!-- PIN Type -->
+
+    <div class="form-group">
+
+        <label for="package">
+            PIN Type
+        </label>
+
+        <div class="input-wrapper">
+
+            <select
+                name="package"
+                id="package"
+                required
+                disabled
+            >
+
+                <option value="">
+                    Select PIN type
+                </option>
+
+                {% for exam in exam_packages %}
+
+                    {% for package, price in exam_packages[exam].items() %}
+
+                        <option
+                            value="{{ package }}"
+                            data-exam="{{ exam }}"
+                            data-price="{{ price }}"
+                        >
+                            {{ package }} —
+                            ₦{{ "{:,.0f}".format(price) }}
+                        </option>
+
+                    {% endfor %}
+
+                {% endfor %}
+
+            </select>
+
+        </div>
+
+        <div class="helper-text">
+            Available PIN types will appear after selecting an examination body.
+        </div>
+
+    </div>
+
+
+    <!-- Quantity -->
+
+    <div class="form-group">
+
+        <label for="quantity">
+            Quantity
+        </label>
+
+        <input
+            type="number"
+            name="quantity"
+            id="quantity"
+            value="1"
+            min="1"
+            required
+        >
+
+        <div class="helper-text">
+            Enter the number of PINs you want to purchase.
+        </div>
+
+    </div>
+
+
+    <!-- Total Amount -->
+
+    <div class="amount-box">
+
+        <span class="amount-label">
+            Total Amount
+        </span>
+
+        <strong
+            class="amount-value"
+            id="amount"
+        >
+            ₦0
+        </strong>
+
+    </div>
+
+
+    <!-- Submit -->
+
+    <button
+        type="submit"
+        class="primary-btn"
+    >
+        Purchase PIN
+    </button>
+
+</form>
+
+
+<div class="secure-note">
+    Payment will be deducted from your available wallet balance.
+</div>
+
+</div><script>
+
+const examSelect =
+    document.getElementById("exam");
+
+const packageSelect =
+    document.getElementById("package");
+
+const quantityInput =
+    document.getElementById("quantity");
+
+const amountDisplay =
+    document.getElementById("amount");
+
+
+const allPackages =
+    Array.from(packageSelect.options);
+
+
+examSelect.addEventListener(
+    "change",
+    function () {
+
+        const selectedExam =
+            this.value;
+
+
+        packageSelect.value = "";
+
+        amountDisplay.textContent =
+            "₦0";
+
+
+        if (!selectedExam) {
+
+            packageSelect.disabled = true;
+
+            return;
+        }
+
+
+        packageSelect.disabled = false;
+
+
+        allPackages.forEach(
+            function (option) {
+
+                if (!option.value) {
+                    return;
+                }
+
+
+                if (
+                    option.dataset.exam ===
+                    selectedExam
+                ) {
+
+                    option.style.display = "";
+
+                } else {
+
+                    option.style.display =
+                        "none";
+
+                }
+
+            }
+        );
+
+    }
+);
+
+
+function updateAmount() {
+
+    const selectedOption =
+        packageSelect.options[
+            packageSelect.selectedIndex
+        ];
+
+
+    const price =
+        selectedOption.dataset.price;
+
+
+    const quantity =
+        parseInt(
+            quantityInput.value
+        ) || 0;
+
+
+    if (price && quantity > 0) {
+
+        const total =
+            Number(price) * quantity;
+
+
+        amountDisplay.textContent =
+            "₦" +
+            total.toLocaleString();
+
+    } else {
+
+        amountDisplay.textContent =
+            "₦0";
+
+    }
+
+}
+
+
+packageSelect.addEventListener(
+    "change",
+    updateAmount
+);
+
+
+quantityInput.addEventListener(
+    "input",
+    updateAmount
+);
+
+</script>{% endblock %}

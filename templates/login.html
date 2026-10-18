@@ -1,0 +1,750 @@
+{% extends "base.html" %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+
+<style>
+    /* Hide normal dashboard-style spacing for the login page */
+    .login-page {
+        min-height: calc(100vh - 80px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 30px 20px;
+        box-sizing: border-box;
+    }
+
+    .login-container {
+        width: 100%;
+        max-width: 430px;
+    }
+
+    .login-brand {
+        text-align: center;
+        margin-bottom: 24px;
+    }
+
+    .brand-icon {
+        width: 64px;
+        height: 64px;
+        margin: 0 auto 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #ffd400;
+        color: #222;
+        border-radius: 18px;
+        font-size: 28px;
+        font-weight: 800;
+        box-shadow: 0 8px 20px rgba(255, 212, 0, 0.25);
+    }
+
+    .login-brand h1 {
+        margin: 0;
+        color: #222;
+        font-size: 27px;
+        font-weight: 800;
+    }
+
+    .login-brand p {
+        margin: 7px 0 0;
+        color: #888;
+        font-size: 13px;
+    }
+
+    .login-card {
+        background: #fff;
+        border-radius: 20px;
+        padding: 30px;
+        box-shadow: 0 8px 35px rgba(0, 0, 0, 0.09);
+        border: 1px solid #eee;
+    }
+
+    .login-card h2 {
+        margin: 0 0 7px;
+        color: #222;
+        font-size: 22px;
+    }
+
+    .login-description {
+        margin: 0 0 18px;
+        color: #888;
+        font-size: 13px;
+        line-height: 1.5;
+    }
+
+    /* Account action buttons */
+    .account-actions {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 25px;
+    }
+
+    .account-action {
+        flex: 1;
+        padding: 11px 12px;
+        border-radius: 10px;
+        text-align: center;
+        text-decoration: none;
+        font-size: 13px;
+        font-weight: 700;
+        transition: 0.2s;
+        box-sizing: border-box;
+    }
+
+    .create-account-btn {
+        background: #ffd400;
+        color: #222;
+        border: 1px solid #ffd400;
+    }
+
+    .create-account-btn:hover {
+        background: #f2c800;
+        border-color: #f2c800;
+    }
+
+    .logout-btn {
+        background: #fff;
+        color: #333;
+        border: 1px solid #ddd;
+    }
+
+    .logout-btn:hover {
+        background: #f7f7f7;
+        border-color: #bbb;
+    }
+
+    .form-group {
+        margin-bottom: 18px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        color: #333;
+        font-size: 13px;
+        font-weight: 700;
+    }
+
+    .input-box {
+        position: relative;
+    }
+
+    .input-icon {
+        position: absolute;
+        left: 14px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #999;
+        font-size: 16px;
+        pointer-events: none;
+    }
+
+    .login-card input {
+        width: 100%;
+        box-sizing: border-box;
+        padding: 14px 14px 14px 43px;
+        border: 1px solid #ddd;
+        border-radius: 11px;
+        background: #fafafa;
+        color: #222;
+        font-size: 14px;
+        outline: none;
+        transition: 0.2s;
+    }
+
+    .login-card input:focus {
+        background: #fff;
+        border-color: #ffd400;
+        box-shadow: 0 0 0 3px rgba(255, 212, 0, 0.15);
+    }
+
+    .login-card input::placeholder {
+        color: #aaa;
+    }
+
+    .login-btn {
+        width: 100%;
+        margin-top: 4px;
+        padding: 15px;
+        border: none;
+        border-radius: 11px;
+        background: #ffd400;
+        color: #222;
+        font-size: 15px;
+        font-weight: 800;
+        cursor: pointer;
+        transition: 0.2s;
+    }
+
+    .login-btn:hover {
+        background: #f2c800;
+        transform: translateY(-1px);
+    }
+
+    .divider {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin: 23px 0;
+        color: #aaa;
+        font-size: 11px;
+        font-weight: 600;
+    }
+
+    .divider::before,
+    .divider::after {
+        content: "";
+        flex: 1;
+        height: 1px;
+        background: #eee;
+    }
+
+    .fingerprint-btn {
+        width: 100%;
+        padding: 14px;
+        border: 1px solid #ddd;
+        border-radius: 11px;
+        background: #fff;
+        color: #333;
+        font-size: 14px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: 0.2s;
+    }
+
+    .fingerprint-btn:hover {
+        border-color: #ffd400;
+        background: #fffdf0;
+    }
+
+    .fingerprint-btn:disabled {
+        opacity: 0.6;
+        cursor: wait;
+    }
+
+    .fingerprint-icon {
+        font-size: 19px;
+        margin-right: 7px;
+        vertical-align: middle;
+    }
+
+    .security-note {
+        margin: 17px 0 0;
+        text-align: center;
+        color: #999;
+        font-size: 11px;
+        line-height: 1.5;
+    }
+
+    .login-footer {
+        margin-top: 20px;
+        text-align: center;
+        color: #999;
+        font-size: 12px;
+    }
+
+    @media (max-width: 600px) {
+
+        .login-page {
+            min-height: calc(100vh - 70px);
+            padding: 20px 15px;
+        }
+
+        .login-brand {
+            margin-bottom: 18px;
+        }
+
+        .brand-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 15px;
+            font-size: 24px;
+        }
+
+        .login-brand h1 {
+            font-size: 24px;
+        }
+
+        .login-card {
+            padding: 24px 18px;
+            border-radius: 16px;
+        }
+
+        .login-card h2 {
+            font-size: 20px;
+        }
+
+        .account-actions {
+            gap: 8px;
+        }
+
+        .account-action {
+            font-size: 12px;
+            padding: 10px 8px;
+        }
+    }
+</style>
+
+<div class="login-page">
+
+    <div class="login-container">
+
+        <!-- Brand -->
+
+        <div class="login-brand">
+
+            <div class="brand-icon">
+                D
+            </div>
+
+            <h1>DataHub</h1>
+
+            <p>
+                Fast, reliable digital services
+            </p>
+
+        </div>
+
+
+        <!-- Login Card -->
+
+        <div class="login-card">
+
+            <h2>
+                Welcome back
+            </h2>
+
+            <p class="login-description">
+                Sign in to your account to continue using DataHub services.
+            </p>
+
+
+            <!-- Account Actions -->
+
+            <div class="account-actions">
+
+                <a
+                    href="{{ url_for('register') }}"
+                    class="account-action create-account-btn"
+                >
+                    Create Account
+                </a>
+
+                <a
+                    href="{{ url_for('logout') }}"
+                    class="account-action logout-btn"
+                >
+                    Log Out
+                </a>
+
+            </div>
+
+
+            <form method="post">
+
+                <!-- Email -->
+
+                <div class="form-group">
+
+                    <label for="email">
+                        Email Address
+                    </label>
+
+                    <div class="input-box">
+
+                        <span class="input-icon">
+                            ✉
+                        </span>
+
+                        <input
+                            id="email"
+                            name="email"
+                            type="email"
+                            placeholder="Enter your email"
+                            autocomplete="email"
+                            required
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <!-- Password -->
+
+                <div class="form-group">
+
+                    <label for="password">
+                        Password
+                    </label>
+
+                    <div class="input-box">
+
+                        <span class="input-icon">
+                            🔒
+                        </span>
+
+                        <input
+                            id="password"
+                            name="password"
+                            type="password"
+                            placeholder="Enter your password"
+                            autocomplete="current-password"
+                            required
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <!-- Login -->
+
+                <button
+                    type="submit"
+                    class="login-btn"
+                >
+                    Sign In
+                </button>
+
+            </form>
+
+
+            <!-- Divider -->
+
+            <div class="divider">
+                <span>OR</span>
+            </div>
+
+
+            <!-- Fingerprint -->
+
+            <button
+                type="button"
+                class="fingerprint-btn"
+                id="fingerprintLogin"
+            >
+                <span class="fingerprint-icon">👆</span>
+                Login with Fingerprint
+            </button>
+
+
+            <p class="security-note">
+                Fingerprint authentication will use your device's secure biometric system.
+            </p>
+
+        </div>
+
+
+        <div class="login-footer">
+            © DataHub. Secure digital services.
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+/*
+    Convert Base64URL text into an ArrayBuffer.
+*/
+function base64urlToArrayBuffer(base64url) {
+
+    const padding = "=".repeat(
+        (4 - (base64url.length % 4)) % 4
+    );
+
+    const base64 = (
+        base64url + padding
+    )
+        .replace(/-/g, "+")
+        .replace(/_/g, "/");
+
+    const binary = atob(base64);
+
+    const bytes = new Uint8Array(binary.length);
+
+    for (let i = 0; i < binary.length; i++) {
+        bytes[i] = binary.charCodeAt(i);
+    }
+
+    return bytes.buffer;
+}
+
+
+/*
+    Convert an ArrayBuffer into Base64URL text.
+*/
+function arrayBufferToBase64url(buffer) {
+
+    const bytes = new Uint8Array(buffer);
+
+    let binary = "";
+
+    for (let i = 0; i < bytes.length; i++) {
+        binary += String.fromCharCode(bytes[i]);
+    }
+
+    return btoa(binary)
+        .replace(/\+/g, "-")
+        .replace(/\//g, "_")
+        .replace(/=+$/, "");
+}
+
+
+/*
+    Fingerprint / Passkey Login
+*/
+document
+    .getElementById("fingerprintLogin")
+    .addEventListener("click", async function () {
+
+        const button = this;
+
+        try {
+
+            /*
+                Make sure the browser supports WebAuthn.
+            */
+            if (
+                !window.PublicKeyCredential ||
+                !navigator.credentials
+            ) {
+
+                alert(
+                    "Fingerprint login is not supported by this browser."
+                );
+
+                return;
+            }
+
+
+            /*
+                Disable the button while authentication is running.
+            */
+            button.disabled = true;
+
+            button.innerHTML =
+                '<span class="fingerprint-icon">👆</span> Checking...';
+
+
+            /*
+                Ask the server for WebAuthn login options.
+            */
+            const response = await fetch(
+                "/webauthn/login/options",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                }
+            );
+
+
+            const data = await response.json();
+
+
+            if (!response.ok) {
+
+                alert(
+                    data.error ||
+                    "Could not start fingerprint login."
+                );
+
+                return;
+            }
+
+
+            /*
+                Convert the server's JSON options.
+            */
+            const options = JSON.parse(data.options);
+
+
+            /*
+                WebAuthn challenge must be an ArrayBuffer.
+            */
+            options.challenge =
+                base64urlToArrayBuffer(
+                    options.challenge
+                );
+
+
+            /*
+                Convert credential IDs if the server
+                supplied them.
+            */
+            if (options.allowCredentials) {
+
+                options.allowCredentials =
+                    options.allowCredentials.map(
+                        function (credential) {
+
+                            return {
+                                ...credential,
+
+                                id:
+                                    base64urlToArrayBuffer(
+                                        credential.id
+                                    )
+                            };
+
+                        }
+                    );
+            }
+
+
+            /*
+                Ask the device to authenticate.
+
+                The phone/laptop itself handles the
+                fingerprint, face, PIN or other secure
+                screen-lock method.
+            */
+            const credential =
+                await navigator.credentials.get({
+
+                    publicKey: options
+
+                });
+
+
+            if (!credential) {
+
+                throw new Error(
+                    "No credential was returned."
+                );
+            }
+
+
+            /*
+                Prepare the credential to send
+                back to Flask.
+            */
+            const credentialData = {
+
+                id: credential.id,
+
+                rawId:
+                    arrayBufferToBase64url(
+                        credential.rawId
+                    ),
+
+                type:
+                    credential.type,
+
+                response: {
+
+                    clientDataJSON:
+                        arrayBufferToBase64url(
+                            credential.response.clientDataJSON
+                        ),
+
+                    authenticatorData:
+                        arrayBufferToBase64url(
+                            credential.response.authenticatorData
+                        ),
+
+                    signature:
+                        arrayBufferToBase64url(
+                            credential.response.signature
+                        ),
+
+                    userHandle:
+                        credential.response.userHandle
+                            ? arrayBufferToBase64url(
+                                  credential.response.userHandle
+                              )
+                            : null
+                }
+            };
+
+
+            /*
+                Send the authenticated credential
+                to Flask for verification.
+            */
+            const verifyResponse =
+                await fetch(
+                    "/webauthn/login/verify",
+                    {
+                        method: "POST",
+
+                        headers: {
+                            "Content-Type":
+                                "application/json"
+                        },
+
+                        body:
+                            JSON.stringify(
+                                credentialData
+                            )
+                    }
+                );
+
+
+            const result =
+                await verifyResponse.json();
+
+
+            if (!verifyResponse.ok) {
+
+                alert(
+                    result.error ||
+                    "Fingerprint login failed."
+                );
+
+                return;
+            }
+
+
+            /*
+                Login successful.
+            */
+            if (result.success) {
+
+                window.location.href =
+                    result.redirect;
+
+            } else {
+
+                alert(
+                    result.error ||
+                    "Fingerprint login failed."
+                );
+            }
+
+        }
+
+        catch (error) {
+
+            console.error(
+                "Fingerprint login error:",
+                error
+            );
+
+            alert(
+                "Fingerprint login was cancelled or is not available on this device."
+            );
+
+        }
+
+        finally {
+
+            button.disabled = false;
+
+            button.innerHTML =
+                '<span class="fingerprint-icon">👆</span> Login with Fingerprint';
+
+        }
+
+    });
+
+</script>
+
+{% endblock %}

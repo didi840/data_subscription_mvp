@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Admin{% endblock %}
+{% block content %}
+<h1>Admin Dashboard</h1>
+<h2>Add Data Plan</h2>
+<form class="inline-form" method="post" action="{{url_for('add_plan')}}">
+<input name="network" placeholder="MTN" required>
+<input name="name" placeholder="10GB" required>
+<input name="price" type="number" placeholder="3500" required>
+<button class="btn">Add</button>
+</form>
+
+<h2>Data Plans</h2>
+<table><tr><th>Network</th><th>Plan</th><th>Price</th><th>Active</th><th>Action</th></tr>
+{% for p in plans %}
+<tr><td>{{p.network}}</td><td>{{p.name}}</td><td>₦{{"{:,.0f}".format(p.price)}}</td><td>{{p.active}}</td><td>
+<form method="post" action="{{url_for('toggle_plan',plan_id=p._id)}}"><button>{{"Disable" if p.active else "Enable"}}</button></form>
+</td></tr>
+{% endfor %}</table>
+
+<h2>Users</h2>
+<table><tr><th>Name</th><th>Email</th><th>Role</th><th>Wallet</th></tr>
+{% for u in users %}<tr><td>{{u.name}}</td><td>{{u.email}}</td><td>{{u.role}}</td><td>₦{{"{:,.0f}".format(u.wallet)}}</td></tr>{% endfor %}</table>
+
+<h2>Latest Transactions</h2>
+<table><tr><th>Reference</th><th>User</th><th>Network/Type</th><th>Amount</th><th>Status</th><th>Mode</th></tr>
+{% for t in transactions %}
+<tr><td>{{t.get('reference','-')}}</td><td>{{t.user_id}}</td><td>{{t.get('network','Wallet funding')}}</td><td>₦{{"{:,.0f}".format(t.amount)}}</td><td>{{t.status}}</td><td>{{t.get('mode','-')}}</td></tr>
+{% endfor %}</table>
+{% endblock %}

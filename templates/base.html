@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>{% block title %}DataHub{% endblock %}</title>
+
+    <style>
+        /* =========================
+           GLOBAL
+        ========================= */
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #0d0d0d;
+            color: #ffffff;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        button,
+        input,
+        select {
+            font-family: inherit;
+        }
+
+        /* =========================
+           SIDEBAR
+        ========================= */
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            width: 240px;
+            background: #111111;
+            border-right: 1px solid #292929;
+            padding: 24px 16px;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* =========================
+           BRAND
+        ========================= */
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 11px;
+            padding: 0 10px;
+            margin-bottom: 35px;
+        }
+
+        .brand-icon {
+            width: 40px;
+            height: 40px;
+            background: #ffd400;
+            color: #111111;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 21px;
+            font-weight: 800;
+        }
+
+        .brand-name {
+            font-size: 20px;
+            font-weight: 700;
+            color: #ffffff;
+            letter-spacing: -0.3px;
+        }
+
+        /* =========================
+           MENU
+        ========================= */
+
+        .menu-title {
+            color: #666666;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 1.2px;
+            padding: 0 12px;
+            margin: 20px 0 10px;
+        }
+
+        .sidebar-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            border-radius: 9px;
+            color: #999999;
+            font-size: 14px;
+            margin-bottom: 4px;
+            transition: all 0.2s ease;
+        }
+
+        .sidebar-link:hover {
+            background: #1c1c1c;
+            color: #ffffff;
+            transform: translateX(2px);
+        }
+
+        .sidebar-link.active {
+            background: #1c1c1c;
+            color: #ffd400;
+        }
+
+        .sidebar-icon {
+            width: 20px;
+            text-align: center;
+            font-size: 16px;
+        }
+
+        /* =========================
+           USER AREA
+           Role label removed
+        ========================= */
+
+        .sidebar-user {
+            margin-top: auto;
+            border-top: 1px solid #292929;
+            padding-top: 16px;
+            margin-left: 0;
+            margin-right: 0;
+        }
+
+        .user-box {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px;
+        }
+
+        .user-avatar {
+            width: 38px;
+            height: 38px;
+            min-width: 38px;
+            border-radius: 50%;
+            background: #ffd400;
+            color: #111111;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+        }
+
+        .user-details {
+            min-width: 0;
+            flex: 1;
+        }
+
+        .user-name {
+            color: #ffffff;
+            font-size: 13px;
+            font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* =========================
+           MAIN CONTENT
+        ========================= */
+
+        .main-content {
+            margin-left: 240px;
+            min-height: 100vh;
+        }
+
+        /* =========================
+           TOPBAR
+        ========================= */
+
+        .topbar {
+            height: 70px;
+            border-bottom: 1px solid #262626;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 30px;
+            background: #0d0d0d;
+            position: sticky;
+            top: 0;
+            z-index: 900;
+        }
+
+        .topbar-title {
+            font-size: 15px;
+            color: #aaaaaa;
+        }
+
+        .topbar-brand {
+            font-size: 14px;
+            color: #777777;
+        }
+
+        /* =========================
+           CONTENT
+        ========================= */
+
+        .content {
+            padding: 30px;
+            max-width: 1200px;
+            margin: auto;
+        }
+
+        /* =========================
+           FLASH MESSAGES
+        ========================= */
+
+        .flash {
+            padding: 13px 16px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            font-size: 13px;
+            border: 1px solid #333333;
+            background: #171717;
+            color: #ffffff;
+        }
+
+        .flash.success {
+            border-color: #355f35;
+            background: #132013;
+            color: #9be29b;
+        }
+
+        .flash.error {
+            border-color: #663333;
+            background: #241414;
+            color: #ff9b9b;
+        }
+
+        .flash.warning {
+            border-color: #665a20;
+            background: #211e0c;
+            color: #ffe47a;
+        }
+
+        /* =========================
+           BUTTONS
+        ========================= */
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: #ffd400;
+            color: #111111;
+            border: none;
+            font-weight: 700;
+            cursor: pointer;
+            border-radius: 9px;
+            padding: 12px 18px;
+            transition: all 0.2s ease;
+        }
+
+        .btn:hover {
+            background: #e8c000;
+            transform: translateY(-1px);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        /* =========================
+           SECONDARY BUTTON
+        ========================= */
+
+        .btn-secondary {
+            background: #1c1c1c;
+            color: #ffffff;
+            border: 1px solid #333333;
+        }
+
+        .btn-secondary:hover {
+            background: #252525;
+            border-color: #444444;
+        }
+
+        /* =========================
+           FORM ELEMENTS
+        ========================= */
+
+        input,
+        select {
+            width: 100%;
+            padding: 12px 14px;
+            background: #151515;
+            border: 1px solid #333333;
+            border-radius: 8px;
+            color: #ffffff;
+            outline: none;
+        }
+
+        input:focus,
+        select:focus {
+            border-color: #ffd400;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 7px;
+            color: #cccccc;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        /* =========================
+           CARDS
+        ========================= */
+
+        .card {
+            background: #111111;
+            border: 1px solid #292929;
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        /* =========================
+           MOBILE BOTTOM NAV
+        ========================= */
+
+        .bottom-nav {
+            display: none;
+        }
+
+        .bottom-nav a {
+            flex: 1;
+            height: 65px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            color: #777777;
+            transition: 0.2s;
+        }
+
+        .bottom-nav a.active {
+            color: #ffd400;
+        }
+
+        .bottom-nav a:hover {
+            color: #ffffff;
+        }
+
+        .bottom-nav-icon {
+            font-size: 19px;
+            line-height: 1;
+        }
+
+        .bottom-nav-label {
+            font-size: 11px;
+            font-weight: normal;
+        }
+
+        /* =========================
+           MOBILE
+        ========================= */
+
+        @media (max-width: 768px) {
+            .sidebar {
+                display: none;
+            }
+
+            .main-content {
+                margin-left: 0;
+                padding-bottom: 75px;
+            }
+
+            .topbar {
+                height: 60px;
+                padding: 0 18px;
+            }
+
+            .content {
+                padding: 20px 16px;
+            }
+
+            .bottom-nav {
+                position: fixed;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                height: 65px;
+                background: #111111;
+                border-top: 1px solid #292929;
+                display: flex;
+                z-index: 9999;
+            }
+
+            .flash {
+                margin-bottom: 15px;
+            }
+        }
+
+        /* =========================
+           SMALL PHONES
+        ========================= */
+
+        @media (max-width: 380px) {
+            .content {
+                padding: 18px 12px;
+            }
+
+            .bottom-nav-label {
+                font-size: 10px;
+            }
+
+            .bottom-nav-icon {
+                font-size: 18px;
+            }
+        }
+    </style>
+
+    {% block head %}{% endblock %}
+</head>
+
+<body>
+
+<!-- =========================
+     SIDEBAR
+========================= -->
+
+<aside class="sidebar">
+
+    <!-- BRAND -->
+
+    <a href="{{ url_for('dashboard') }}"
+       class="brand">
+
+        <div class="brand-icon">D</div>
+
+        <div class="brand-name">DataHub</div>
+
+    </a>
+
+    <!-- MAIN MENU -->
+
+    <div class="menu-title">MAIN MENU</div>
+
+    <a href="{{ url_for('dashboard') }}"
+       class="sidebar-link">
+
+        <div class="sidebar-icon">⌂</div>
+
+        <span>Dashboard</span>
+
+    </a>
+
+    <a href="{{ url_for('buy_data') }}"
+       class="sidebar-link">
+
+        <div class="sidebar-icon">▣</div>
+
+        <span>Data Bundles</span>
+
+    </a>
+
+    <a href="{{ url_for('wallet') }}"
+       class="sidebar-link">
+
+        <div class="sidebar-icon">₦</div>
+
+        <span>Wallet</span>
+
+    </a>
+
+    <a href="{{ url_for('transactions_page') }}"
+       class="sidebar-link">
+
+        <div class="sidebar-icon">↔</div>
+
+        <span>Transactions</span>
+
+    </a>
+
+    <!-- ADMINISTRATION -->
+
+    {% if logged_user and logged_user.role == 'admin' %}
+
+        <div class="menu-title">ADMINISTRATION</div>
+
+        <a href="{{ url_for('admin') }}"
+           class="sidebar-link">
+
+            <div class="sidebar-icon">⚙</div>
+
+            <span>Admin Panel</span>
+
+        </a>
+
+    {% endif %}
+
+    <!-- ACCOUNT -->
+
+    <div class="menu-title">ACCOUNT</div>
+
+    <a href="{{ url_for('logout') }}"
+       class="sidebar-link">
+
+        <div class="sidebar-icon">↪</div>
+
+        <span>Sign Out</span>
+
+    </a>
+
+    <!-- USER PROFILE -->
+
+    {% if logged_user %}
+
+        <div class="sidebar-user">
+
+            <div class="user-box">
+
+                <div class="user-avatar">
+                    {{ logged_user.name[0]|upper }}
+                </div>
+
+                <div class="user-details">
+
+                    <div class="user-name">
+                        {{ logged_user.name }}
+                    </div>
+
+                    <!-- Staff/role label intentionally removed -->
+
+                </div>
+
+            </div>
+
+        </div>
+
+    {% endif %}
+
+</aside>
+
+<!-- =========================
+     MAIN CONTENT
+========================= -->
+
+<main class="main-content">
+
+    <!-- TOPBAR -->
+
+    <div class="topbar">
+
+        <div class="topbar-title">
+            DataHub
+        </div>
+
+        <div class="topbar-brand">
+            Data &amp; Airtime Services
+        </div>
+
+    </div>
+
+    <!-- PAGE CONTENT -->
+
+    <div class="content">
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+
+            {% for category, msg in messages %}
+
+                <div class="flash {{ category }}">
+                    {{ msg }}
+                </div>
+
+            {% endfor %}
+
+        {% endwith %}
+
+        {% block content %}
+        {% endblock %}
+
+    </div>
+
+</main>
+
+<!-- =========================
+     MOBILE NAVIGATION
+========================= -->
+
+<nav class="bottom-nav">
+
+    <a href="{{ url_for('dashboard') }}"
+       class="active">
+
+        <div class="bottom-nav-icon">⌂</div>
+
+        <div class="bottom-nav-label">Home</div>
+
+    </a>
+
+    <a href="{{ url_for('transactions_page') }}">
+
+        <div class="bottom-nav-icon">▤</div>
+
+        <div class="bottom-nav-label">Transactions</div>
+
+    </a>
+
+    <a href="{{ url_for('wallet') }}">
+
+        <div class="bottom-nav-icon">₦</div>
+
+        <div class="bottom-nav-label">Wallet</div>
+
+    </a>
+
+    <a href="{{ url_for('logout') }}">
+
+        <div class="bottom-nav-icon">◉</div>
+
+        <div class="bottom-nav-label">Account</div>
+
+    </a>
+
+</nav>
+
+</body>
+</html>

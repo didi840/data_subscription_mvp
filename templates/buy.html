@@ -1,0 +1,627 @@
+{% extends "base.html" %}
+
+{% block title %}Buy Data{% endblock %}
+
+{% block content %}
+
+<div class="page-container">
+
+    <div class="form-card">
+
+        <div class="data-header">
+            <p>DATA SERVICES</p>
+            <h2>Buy Data</h2>
+            <span>Choose a network, plan type and duration.</span>
+        </div>
+
+        <form method="post">
+
+            <!-- NETWORK -->
+            <label class="section-label">Select Network</label>
+
+            <div class="network-grid">
+
+                <!-- MTN -->
+                <button type="button"
+                        class="network-btn active"
+                        onclick="showNetwork('MTN', this)">
+
+                    <img src="{{ url_for('static', filename='images/mtn.svg') }}"
+                         alt="MTN">
+
+                    <span>MTN</span>
+
+                </button>
+
+
+                <!-- AIRTEL -->
+                <button type="button"
+                        class="network-btn"
+                        onclick="showNetwork('Airtel', this)">
+
+                    <img src="{{ url_for('static', filename='images/airtel.svg') }}"
+                         alt="Airtel">
+
+                    <span>Airtel</span>
+
+                </button>
+
+
+                <!-- GLO -->
+                <button type="button"
+                        class="network-btn"
+                        onclick="showNetwork('Glo', this)">
+
+                    <img src="{{ url_for('static', filename='images/glo.svg') }}"
+                         alt="Glo">
+
+                    <span>Glo</span>
+
+                </button>
+
+
+                <!-- 9MOBILE -->
+                <button type="button"
+                        class="network-btn"
+                        onclick="showNetwork('9mobile', this)">
+
+                    <img src="{{ url_for('static', filename='images/9mobile.svg') }}"
+                         alt="9mobile">
+
+                    <span>9mobile</span>
+
+                </button>
+
+            </div>
+
+
+            <!-- PLAN TYPE -->
+            <label class="section-label">Plan Type</label>
+
+            <div class="type-grid">
+
+                <button type="button"
+                        class="type-btn active"
+                        onclick="showType('Gifting', this)">
+                    Gifting
+                </button>
+
+                <button type="button"
+                        class="type-btn"
+                        onclick="showType('SME', this)">
+                    SME
+                </button>
+
+            </div>
+
+
+            <!-- DURATION -->
+            <label class="section-label">Choose Duration</label>
+
+            <div class="duration-grid">
+
+                <button type="button"
+                        class="duration-btn active"
+                        onclick="showDuration('ALL', this)">
+                    All
+                </button>
+
+                <button type="button"
+                        class="duration-btn"
+                        onclick="showDuration('1 Day', this)">
+                    1 Day
+                </button>
+
+                <button type="button"
+                        class="duration-btn"
+                        onclick="showDuration('2 Days', this)">
+                    2 Days
+                </button>
+
+                <button type="button"
+                        class="duration-btn"
+                        onclick="showDuration('3 Days', this)">
+                    3 Days
+                </button>
+
+                <button type="button"
+                        class="duration-btn"
+                        onclick="showDuration('1 Week', this)">
+                    1 Week
+                </button>
+
+                <button type="button"
+                        class="duration-btn"
+                        onclick="showDuration('2 Weeks', this)">
+                    2 Weeks
+                </button>
+
+                <button type="button"
+                        class="duration-btn"
+                        onclick="showDuration('Monthly', this)">
+                    Monthly
+                </button>
+
+            </div>
+
+
+            <!-- PLANS -->
+            <label class="section-label">
+                Available Data Plans
+            </label>
+
+            <div id="plans-container">
+
+                {% for p in plans %}
+
+                <label class="plan-card"
+                       data-network="{{ p.network }}"
+                       data-type="{{ p.type|default('Gifting') }}"
+                       data-duration="{{ p.duration }}">
+
+                    <input
+                        type="radio"
+                        name="plan_id"
+                        value="{{ p._id }}"
+                        required
+                    >
+
+                    <div class="plan-left">
+
+                        <strong>
+                            {{ p.name }}
+                        </strong>
+
+                        <span>
+                            {{ p.duration }}
+                        </span>
+
+                    </div>
+
+                    <div class="plan-right">
+
+                        <strong>
+                            ₦{{ "{:,.0f}".format(p.price) }}
+                        </strong>
+
+                        <small>
+                            Select
+                        </small>
+
+                    </div>
+
+                </label>
+
+                {% endfor %}
+
+            </div>
+
+
+            <!-- NO PLANS MESSAGE -->
+            <div id="no-plans" class="empty-plan">
+                No plans available for this selection yet.
+            </div>
+
+
+            <!-- PHONE -->
+            <label class="section-label" for="phone">
+                Recipient Phone Number
+            </label>
+
+            <input
+                type="tel"
+                name="phone"
+                id="phone"
+                placeholder="08012345678"
+                maxlength="11"
+                inputmode="numeric"
+                required
+            >
+
+
+            <button type="submit" class="btn">
+                Continue to Purchase
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<style>
+
+.data-header {
+    margin-bottom: 25px;
+}
+
+.data-header p {
+    color: #ffd400;
+    font-size: 13px;
+    font-weight: bold;
+    letter-spacing: 1.5px;
+    margin-bottom: 8px;
+}
+
+.data-header h2 {
+    margin-bottom: 7px;
+}
+
+.data-header span {
+    color: #9b9b9b;
+    font-size: 14px;
+}
+
+
+/* SECTION LABEL */
+
+.section-label {
+    display: block;
+    margin-top: 18px;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+
+/* NETWORK */
+
+.network-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    margin-bottom: 5px;
+}
+
+.network-btn {
+    background: #111;
+    color: #fff;
+    border: 1px solid #333;
+
+    padding: 10px 5px;
+
+    border-radius: 10px;
+
+    cursor: pointer;
+
+    font-weight: bold;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 7px;
+
+    min-height: 55px;
+
+    transition: 0.2s;
+}
+
+.network-btn img {
+    width: 28px;
+    height: 28px;
+
+    object-fit: contain;
+
+    border-radius: 50%;
+}
+
+.network-btn span {
+    font-size: 13px;
+}
+
+.network-btn:hover {
+    border-color: #ffd400;
+    transform: translateY(-1px);
+}
+
+.network-btn.active {
+    background: #ffd400;
+    color: #000;
+    border-color: #ffd400;
+}
+
+
+/* PLAN TYPE */
+
+.type-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+}
+
+.type-btn,
+.duration-btn {
+    background: #111;
+    color: #fff;
+    border: 1px solid #333;
+
+    padding: 12px 5px;
+
+    border-radius: 9px;
+
+    cursor: pointer;
+
+    font-weight: bold;
+
+    transition: 0.2s;
+}
+
+.type-btn:hover,
+.duration-btn:hover {
+    border-color: #ffd400;
+}
+
+.type-btn.active,
+.duration-btn.active {
+    background: #ffd400;
+    color: #000;
+    border-color: #ffd400;
+}
+
+
+/* DURATION */
+
+.duration-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+}
+
+
+/* PLANS */
+
+#plans-container {
+    margin-top: 10px;
+}
+
+.plan-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    background: #111;
+
+    border: 1px solid #292929;
+
+    border-radius: 12px;
+
+    padding: 15px;
+
+    margin-bottom: 9px;
+
+    cursor: pointer;
+
+    transition: 0.2s;
+}
+
+.plan-card:hover {
+    border-color: #ffd400;
+}
+
+.plan-card input {
+    display: none;
+}
+
+.plan-card.selected {
+    border: 2px solid #ffd400;
+}
+
+.plan-left {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.plan-left strong {
+    color: #fff;
+    font-size: 16px;
+}
+
+.plan-left span {
+    color: #999;
+    font-size: 12px;
+}
+
+.plan-right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 4px;
+}
+
+.plan-right strong {
+    color: #ffd400;
+    font-size: 16px;
+}
+
+.plan-right small {
+    color: #999;
+    font-size: 11px;
+}
+
+
+/* NO PLANS */
+
+.empty-plan {
+    background: #101010;
+
+    border: 1px dashed #333;
+
+    border-radius: 10px;
+
+    padding: 15px;
+
+    color: #777;
+
+    font-size: 13px;
+
+    margin-top: 10px;
+}
+
+
+/* MOBILE */
+
+@media (max-width: 600px) {
+
+    .network-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .network-btn {
+        min-height: 60px;
+    }
+
+    .duration-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+}
+
+</style>
+
+
+<script>
+
+let selectedNetwork = "MTN";
+let selectedType = "Gifting";
+let selectedDuration = "ALL";
+
+
+function showNetwork(network, button) {
+
+    selectedNetwork = network;
+
+    document.querySelectorAll(".network-btn").forEach(btn => {
+        btn.classList.remove("active");
+    });
+
+    button.classList.add("active");
+
+    filterPlans();
+}
+
+
+function showType(type, button) {
+
+    selectedType = type;
+
+    document.querySelectorAll(".type-btn").forEach(btn => {
+        btn.classList.remove("active");
+    });
+
+    button.classList.add("active");
+
+    filterPlans();
+}
+
+
+function showDuration(duration, button) {
+
+    selectedDuration = duration;
+
+    document.querySelectorAll(".duration-btn").forEach(btn => {
+        btn.classList.remove("active");
+    });
+
+    button.classList.add("active");
+
+    filterPlans();
+}
+
+
+function filterPlans() {
+
+    let visiblePlans = 0;
+
+    document.querySelectorAll(".plan-card").forEach(plan => {
+
+        let network = plan.dataset.network;
+        let type = plan.dataset.type;
+        let duration = plan.dataset.duration;
+
+        let show = true;
+
+
+        /* NETWORK */
+
+        if (network !== selectedNetwork) {
+            show = false;
+        }
+
+
+        /* PLAN TYPE */
+
+        if (type !== selectedType) {
+            show = false;
+        }
+
+
+        /* DURATION */
+
+        if (
+            selectedDuration !== "ALL" &&
+            duration !== selectedDuration
+        ) {
+            show = false;
+        }
+
+
+        if (show) {
+
+            plan.style.display = "flex";
+
+            visiblePlans++;
+
+        } else {
+
+            plan.style.display = "none";
+
+        }
+
+    });
+
+
+    /* NO PLANS MESSAGE */
+
+    let noPlans = document.getElementById("no-plans");
+
+    if (visiblePlans === 0) {
+
+        noPlans.style.display = "block";
+
+    } else {
+
+        noPlans.style.display = "none";
+
+    }
+
+}
+
+
+/* Highlight selected plan */
+
+document.querySelectorAll(".plan-card").forEach(card => {
+
+    card.addEventListener("click", function() {
+
+        document.querySelectorAll(".plan-card").forEach(c => {
+            c.classList.remove("selected");
+        });
+
+        this.classList.add("selected");
+
+        this.querySelector("input").checked = true;
+
+    });
+
+});
+
+
+/* Run filtering when page opens */
+
+filterPlans();
+
+</script>
+
+{% endblock %}

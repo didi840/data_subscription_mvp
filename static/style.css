@@ -1,0 +1,720 @@
+/* =========================================================
+   DATA SUBSCRIPTION APP
+   YELLOW + BLACK FINTECH THEME
+   ========================================================= */
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+:root {
+    --black: #080808;
+    --black-soft: #101010;
+    --card: #151515;
+    --card-light: #1c1c1c;
+    --yellow: #ffd400;
+    --yellow-dark: #e6bd00;
+    --white: #ffffff;
+    --text: #f5f5f5;
+    --muted: #9b9b9b;
+    --border: #292929;
+    --danger: #ff4d4d;
+    --success: #22c55e;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: var(--black);
+    color: var(--text);
+    min-height: 100vh;
+}
+
+/* =========================================================
+   LINKS
+   ========================================================= */
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+/* =========================================================
+   GENERAL CONTAINER
+   ========================================================= */
+
+.container {
+    width: 100%;
+    max-width: 1100px;
+    margin: auto;
+    padding: 20px;
+}
+
+/* =========================================================
+   DASHBOARD
+   ========================================================= */
+
+.dashboard-page {
+    min-height: 100vh;
+    background:
+        radial-gradient(
+            circle at top right,
+            rgba(255, 212, 0, 0.08),
+            transparent 30%
+        ),
+        var(--black);
+    padding-bottom: 90px;
+}
+
+/* =========================================================
+   DASHBOARD HEADER
+   ========================================================= */
+
+.dashboard-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 22px 20px 18px;
+    max-width: 600px;
+    margin: auto;
+}
+
+.header-user {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.user-avatar {
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    background: var(--yellow);
+    color: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    font-weight: 800;
+    box-shadow: 0 6px 18px rgba(255, 212, 0, 0.22);
+}
+
+.header-user h2 {
+    font-size: 17px;
+    color: var(--white);
+    margin-bottom: 3px;
+}
+
+.header-user p {
+    font-size: 12px;
+    color: var(--muted);
+}
+
+.notification-btn {
+    width: 42px;
+    height: 42px;
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    background: var(--card);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--yellow);
+    font-size: 18px;
+    transition: 0.2s ease;
+}
+
+.notification-btn:hover {
+    background: var(--yellow);
+    color: #000;
+}
+
+/* =========================================================
+   WALLET CARD
+   ========================================================= */
+
+.wallet-card {
+    position: relative;
+    overflow: hidden;
+    max-width: 600px;
+    margin: 5px auto 25px;
+    min-height: 190px;
+    border-radius: 24px;
+    padding: 24px;
+    background:
+        linear-gradient(
+            135deg,
+            #191919 0%,
+            #090909 65%,
+            #151515 100%
+        );
+    border: 1px solid #303030;
+    box-shadow:
+        0 15px 40px rgba(0, 0, 0, 0.45),
+        inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+.wallet-content {
+    position: relative;
+    z-index: 2;
+}
+
+.wallet-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.wallet-label {
+    font-size: 13px;
+    color: var(--muted);
+    letter-spacing: 0.3px;
+}
+
+.wallet-icon {
+    width: 38px;
+    height: 38px;
+    border-radius: 11px;
+    background: var(--yellow);
+    color: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 17px;
+    font-weight: bold;
+}
+
+.wallet-card h1 {
+    font-size: 32px;
+    margin-top: 10px;
+    color: var(--white);
+    letter-spacing: -1px;
+}
+
+.wallet-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 25px;
+}
+
+.wallet-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--yellow);
+    color: #000;
+    font-weight: 800;
+    padding: 11px 18px;
+    border-radius: 10px;
+    font-size: 13px;
+    transition: 0.2s ease;
+}
+
+.wallet-button:hover {
+    background: #ffe45c;
+    transform: translateY(-1px);
+}
+
+.wallet-background-circle {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+}
+
+.wallet-background-circle::before,
+.wallet-background-circle::after {
+    content: "";
+    position: absolute;
+    border: 1px solid rgba(255, 212, 0, 0.16);
+    border-radius: 50%;
+}
+
+.wallet-background-circle::before {
+    width: 220px;
+    height: 220px;
+    right: -90px;
+    top: -90px;
+}
+
+.wallet-background-circle::after {
+    width: 150px;
+    height: 150px;
+    right: -45px;
+    bottom: -70px;
+}
+
+.circle-one,
+.circle-two {
+    display: none;
+}
+
+/* =========================================================
+   SECTION TITLES
+   ========================================================= */
+
+.services-section,
+.transactions-card,
+.promo-card {
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.section-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 25px 0 14px;
+}
+
+.section-title h3 {
+    font-size: 17px;
+    color: var(--white);
+}
+
+.section-title a {
+    font-size: 12px;
+    color: var(--yellow);
+    font-weight: bold;
+}
+
+/* =========================================================
+   SERVICES GRID
+   ========================================================= */
+
+.services-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+}
+
+.service-card {
+    min-height: 125px;
+    padding: 16px 12px;
+    border-radius: 17px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: 0.2s ease;
+}
+
+.service-card:hover {
+    transform: translateY(-3px);
+    border-color: rgba(255, 212, 0, 0.45);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+}
+
+.service-icon {
+    width: 43px;
+    height: 43px;
+    border-radius: 13px;
+    background: rgba(255, 212, 0, 0.12);
+    color: var(--yellow);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 21px;
+}
+
+.service-card h4 {
+    font-size: 14px;
+    color: var(--white);
+    margin-top: 12px;
+}
+
+.service-card p {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 4px;
+}
+
+/* Remove old individual service colors */
+.data-service,
+.airtime-service,
+.cable-service,
+.electricity-service,
+.exam-service,
+.cash-service {
+    background: var(--card);
+}
+
+/* =========================================================
+   PROMO CARD
+   ========================================================= */
+
+.promo-card {
+    margin-top: 22px;
+    margin-bottom: 25px;
+    padding: 20px;
+    border-radius: 20px;
+    background:
+        linear-gradient(
+            135deg,
+            var(--yellow),
+            #e7bd00
+        );
+    color: #000;
+    position: relative;
+    overflow: hidden;
+}
+
+.promo-card h3 {
+    font-size: 18px;
+    margin-bottom: 6px;
+}
+
+.promo-card p {
+    font-size: 12px;
+    line-height: 1.5;
+    max-width: 75%;
+    opacity: 0.8;
+}
+
+.promo-card::after {
+    content: "₦";
+    position: absolute;
+    right: 20px;
+    bottom: -25px;
+    font-size: 100px;
+    font-weight: 900;
+    opacity: 0.1;
+}
+
+/* =========================================================
+   TRANSACTIONS
+   ========================================================= */
+
+.transactions-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+.transactions-card .section-title {
+    padding: 18px 18px 12px;
+    margin: 0;
+}
+
+.transaction-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 18px;
+    border-top: 1px solid var(--border);
+}
+
+.transaction-icon {
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0;
+    border-radius: 12px;
+    background: rgba(255, 212, 0, 0.12);
+    color: var(--yellow);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.transaction-details {
+    flex: 1;
+}
+
+.transaction-details h4 {
+    font-size: 13px;
+    color: var(--white);
+}
+
+.transaction-details p {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 4px;
+}
+
+.transaction-amount {
+    font-size: 13px;
+    font-weight: bold;
+    color: var(--white);
+}
+
+.transaction-success {
+    color: var(--success);
+}
+
+/* =========================================================
+   BOTTOM NAVIGATION
+   ========================================================= */
+
+.bottom-nav {
+    position: fixed;
+    left: 50%;
+    bottom: 0;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 600px;
+    height: 72px;
+    background: rgba(12, 12, 12, 0.97);
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    z-index: 100;
+    backdrop-filter: blur(12px);
+}
+
+.bottom-nav a {
+    width: 25%;
+    text-align: center;
+    color: #777;
+    font-size: 10px;
+    transition: 0.2s ease;
+}
+
+.bottom-nav a:hover {
+    color: var(--yellow);
+}
+
+.bottom-nav a::first-line {
+    color: inherit;
+}
+
+/* =========================================================
+   BUTTONS
+   ========================================================= */
+
+button,
+.btn {
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+}
+
+.btn-primary,
+button[type="submit"] {
+    width: 100%;
+    padding: 14px;
+    border-radius: 11px;
+    background: var(--yellow);
+    color: #000;
+    font-weight: 800;
+    font-size: 14px;
+    transition: 0.2s ease;
+}
+
+.btn-primary:hover,
+button[type="submit"]:hover {
+    background: #ffe45c;
+    transform: translateY(-1px);
+}
+
+/* =========================================================
+   FORMS / AUTH PAGES
+   ========================================================= */
+
+.auth-container,
+.form-container,
+.page-container {
+    width: 100%;
+    max-width: 500px;
+    margin: 40px auto;
+    padding: 20px;
+}
+
+.auth-card,
+.form-card,
+.card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 25px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+}
+
+.auth-card h1,
+.form-card h1,
+.card h1 {
+    color: var(--white);
+    margin-bottom: 8px;
+}
+
+.auth-card p,
+.form-card p {
+    color: var(--muted);
+}
+
+label {
+    display: block;
+    color: #d7d7d7;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 7px;
+}
+
+input,
+select,
+textarea {
+    width: 100%;
+    padding: 13px 14px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: #0e0e0e;
+    color: var(--white);
+    outline: none;
+    font-size: 14px;
+    margin-bottom: 15px;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    border-color: var(--yellow);
+    box-shadow: 0 0 0 2px rgba(255, 212, 0, 0.1);
+}
+
+option {
+    background: #111;
+    color: white;
+}
+
+/* =========================================================
+   ALERTS / FLASH MESSAGES
+   ========================================================= */
+
+.alert,
+.flash {
+    padding: 13px 15px;
+    border-radius: 10px;
+    margin-bottom: 15px;
+    font-size: 13px;
+}
+
+.alert-success,
+.flash-success {
+    background: rgba(34, 197, 94, 0.12);
+    border: 1px solid rgba(34, 197, 94, 0.3);
+    color: #67e28b;
+}
+
+.alert-danger,
+.flash-danger {
+    background: rgba(255, 77, 77, 0.12);
+    border: 1px solid rgba(255, 77, 77, 0.3);
+    color: #ff8080;
+}
+
+.alert-warning,
+.flash-warning {
+    background: rgba(255, 212, 0, 0.1);
+    border: 1px solid rgba(255, 212, 0, 0.3);
+    color: var(--yellow);
+}
+
+/* =========================================================
+   TABLES
+   ========================================================= */
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--card);
+    border-radius: 15px;
+    overflow: hidden;
+}
+
+th,
+td {
+    padding: 13px;
+    border-bottom: 1px solid var(--border);
+    text-align: left;
+    font-size: 13px;
+}
+
+th {
+    color: var(--yellow);
+    background: #101010;
+}
+
+td {
+    color: #ddd;
+}
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 600px) {
+
+    .dashboard-header {
+        padding: 18px 16px;
+    }
+
+    .wallet-card {
+        margin: 5px 16px 22px;
+        min-height: 180px;
+        padding: 21px;
+        border-radius: 21px;
+    }
+
+    .wallet-card h1 {
+        font-size: 29px;
+    }
+
+    .services-section,
+    .transactions-card,
+    .promo-card {
+        margin-left: 16px;
+        margin-right: 16px;
+    }
+
+    .services-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+
+    .service-card {
+        min-height: 120px;
+    }
+
+    .promo-card {
+        padding: 18px;
+    }
+
+    .promo-card p {
+        max-width: 80%;
+    }
+
+    .auth-container,
+    .form-container,
+    .page-container {
+        margin: 20px auto;
+        padding: 16px;
+    }
+}
+
+/* =========================================================
+   VERY SMALL PHONES
+   ========================================================= */
+
+@media (max-width: 360px) {
+
+    .services-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .wallet-card h1 {
+        font-size: 25px;
+    }
+
+    .service-card {
+        padding: 13px 10px;
+    }
+
+    .service-icon {
+        width: 38px;
+        height: 38px;
+    }
+}
