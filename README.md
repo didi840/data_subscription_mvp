@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Data Subscription App MVP
 
 A Flask + MongoDB MVP for a Nigerian data subscription business.
@@ -32,3 +33,7 @@ Email: admin@example.com
 Password: Admin123!
 
 Change this password before using the project for anything real.
+=======
+# data_subscription_mvp
+A flask based Nigerian VTU platform for data, airtime, wallet management, and digital services.
+>>>>>>> origin/main
