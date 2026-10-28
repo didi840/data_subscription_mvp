@@ -188,6 +188,7 @@ transactions = db["transactions"]
 webauthn_credentials = db["webauthn_credentials"]
 
 pending_registrations = db["pending_registrations"]
+password_resets = db["password_resets"]
 # =========================================================
 # DATABASE HELPERS
 # =========================================================
@@ -948,7 +949,65 @@ def resend_verification():
 
     return redirect(url_for("verify_email"))
 
+def send_password_reset_email(recipient_email, reset_url):
+    api_key = os.getenv("BREVO_API_KEY")
+    sender_email = os.getenv("BREVO_SENDER_EMAIL")
 
+    if not api_key or not sender_email:
+        app.logger.error("Brevo password-reset configuration is missing.")
+        return False
+
+    payload = {
+        "sender": {
+            "name": "DataHub",
+            "email": sender_email
+        },
+        "to": [{"email": recipient_email}],
+        "subject": "Reset Your DataHub Password",
+        "htmlContent": f"""
+        <div style="font-family:Arial,sans-serif;
+                    max-width:500px;margin:auto;padding:25px;">
+            <h2>Reset your DataHub password</h2>
+            <p>We received a request to reset your password.</p>
+            <p>
+                <a href="{reset_url}"
+                   style="display:inline-block;padding:12px 20px;
+                          background:#ffd400;color:#222;
+                          text-decoration:none;border-radius:8px;
+                          font-weight:bold;">
+                    Reset Password
+                </a>
+            </p>
+            <p>This link expires in 30 minutes and can only be used once.</p>
+            <p>If you did not request this, you can ignore this email.</p>
+        </div>
+        """
+    }
+
+    try:
+        response = requests.post(
+            "https://api.brevo.com/v3/smtp/email",
+            headers={
+                "accept": "application/json",
+                "api-key": api_key,
+                "content-type": "application/json"
+            },
+            json=payload,
+            timeout=20
+        )
+
+        if response.status_code in (200, 201, 202):
+            return True
+
+        app.logger.error(
+            "Brevo password-reset email failed: HTTP %s",
+            response.status_code
+        )
+        return False
+
+    except requests.RequestException:
+        app.logger.exception("Password-reset email could not be sent.")
+        return False
 # =========================================================
 # WEBAUTHN FINGERPRINT REGISTRATION
 # =========================================================
@@ -1429,7 +1488,132 @@ def login():
     return render_template(
         "login.html"
     )
+# =========================================================
+# FORGOT PASSWORD
+# =========================================================
 
+@app.route("/forgot-password", methods=["GET", "POST"])
+def forgot_password():
+    if request.method == "GET":
+        return render_template("forgot_password.html")
+
+    email = request.form.get("email", "").strip().lower()
+    now = datetime.utcnow()
+
+    # Always use a general response to avoid revealing
+    # whether an email address has an account.
+    message = (
+        "If an account exists for that email, "
+        "a password-reset link will be sent shortly."
+    )
+
+    if not email or not re.fullmatch(
+        r"[^@\s]+@[^@\s]+\.[^@\s]+", email
+    ):
+        flash(message, "success")
+        return redirect(url_for("forgot_password"))
+
+    user = users.find_one({"email": email})
+
+    if not user:
+        flash(message, "success")
+        return redirect(url_for("forgot_password"))
+
+    # Limit repeated reset emails for the same account.
+    previous = password_resets.find_one({"email": email})
+
+    if previous:
+        last_sent = previous.get("last_sent_at")
+
+        if last_sent and (now - last_sent).total_seconds() < 60:
+            flash(message, "success")
+            return redirect(url_for("forgot_password"))
+
+    # Generate a random token; store only its hash.
+    token = secrets.token_urlsafe(32)
+    token_hash = hashlib.sha256(token.encode("utf-8")).hexdigest()
+
+    reset_url = url_for(
+        "reset_password",
+        token=token,
+        _external=True
+    )
+
+    # Send first, then save the usable token only if sending succeeds.
+    if not send_password_reset_email(email, reset_url):
+        flash(
+            "We could not send the reset email right now. Please try again later.",
+            "error"
+        )
+        return redirect(url_for("forgot_password"))
+
+    password_resets.update_one(
+        {"email": email},
+        {
+            "$set": {
+                "email": email,
+                "token_hash": token_hash,
+                "expires_at": now + timedelta(minutes=30),
+                "last_sent_at": now
+            }
+        },
+        upsert=True
+    )
+
+    flash(message, "success")
+    return redirect(url_for("forgot_password"))
+
+
+# =========================================================
+# RESET PASSWORD
+# =========================================================
+
+@app.route("/reset-password/<token>", methods=["GET", "POST"])
+def reset_password(token):
+    token_hash = hashlib.sha256(token.encode("utf-8")).hexdigest()
+    now = datetime.utcnow()
+
+    reset_request = password_resets.find_one({
+        "token_hash": token_hash,
+        "expires_at": {"$gt": now}
+    })
+
+    if not reset_request:
+        flash(
+            "This password-reset link is invalid or has expired. "
+            "Please request another one.",
+            "error"
+        )
+        return redirect(url_for("forgot_password"))
+
+    if request.method == "GET":
+        return render_template("reset_password.html")
+
+    password = request.form.get("password", "")
+    confirm_password = request.form.get("confirm_password", "")
+
+    if len(password) < 8:
+        flash("Your new password must contain at least 8 characters.", "error")
+        return redirect(url_for("reset_password", token=token))
+
+    if password != confirm_password:
+        flash("The passwords do not match.", "error")
+        return redirect(url_for("reset_password", token=token))
+
+    result = users.update_one(
+        {"email": reset_request["email"]},
+        {"$set": {"password": generate_password_hash(password)}}
+    )
+
+    if result.matched_count != 1:
+        flash("The account could not be found. Please try again.", "error")
+        return redirect(url_for("forgot_password"))
+
+    # Delete the token so it cannot be reused.
+    password_resets.delete_one({"_id": reset_request["_id"]})
+
+    flash("Your password has been reset. You can now sign in.", "success")
+    return redirect(url_for("login"))
 
 # =========================================================
 # LOGOUT
