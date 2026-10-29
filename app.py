@@ -1533,12 +1533,10 @@ def forgot_password():
     token = secrets.token_urlsafe(32)
     token_hash = hashlib.sha256(token.encode("utf-8")).hexdigest()
 
-    reset_url = url_for(
-        "reset_password",
-        token=token,
-        _external=True
-    )
-
+    reset_url = (
+    "https://datahub-vtu.onrender.com"
+    + url_for("reset_password", token=token)
+)
     # Send first, then save the usable token only if sending succeeds.
     if not send_password_reset_email(email, reset_url):
         flash(
